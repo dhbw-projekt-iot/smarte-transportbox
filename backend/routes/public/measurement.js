@@ -6,6 +6,7 @@ router.get("/temperature", async (req, res) => {
 
     if (!deviceID || !timestamp) {
         res.status(400).send("Device ID and Timestamp are mandatory");
+        return;
     }
 
     // TODO
@@ -18,6 +19,7 @@ router.get("/humidity", async (req, res) => {
 
     if (!deviceID || !timestamp) {
         res.status(400).send("Device ID and Timestamp are mandatory");
+        return;
     }
 
     // TODO
@@ -30,6 +32,7 @@ router.get("/tilt", async (req, res) => {
 
     if (!deviceID || !timestamp) {
         res.status(400).send("Device ID and Timestamp are mandatory");
+        return;
     }
 
     // TODO
@@ -41,6 +44,7 @@ router.get("/vibration", async (req, res) => {
 
     if (!deviceID || !timestamp) {
         res.status(400).send("Device ID and Timestamp are mandatory");
+        return;
     }
 
     // TODO
