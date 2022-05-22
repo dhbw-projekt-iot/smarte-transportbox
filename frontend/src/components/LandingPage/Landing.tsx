@@ -1,4 +1,4 @@
-import Picture from '../assets/picture_landing.svg';
+import Picture from '../../assets/picture_landing.svg';
 import PictureLuis from '../../assets/picture_luis.png';
 import Navbar from './Navbar';
 

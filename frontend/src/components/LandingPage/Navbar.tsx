@@ -1,8 +1,8 @@
-import { Fragment } from 'react';
-import { Disclosure, Menu, Transition } from '@headlessui/react';
+import { Disclosure } from '@headlessui/react';
 import { HiMenu, HiX } from 'react-icons/hi';
-import Logged from './Logged';
+
 import { Link } from 'react-router-dom';
+import Logged from './Logged';
 
 export interface Props {
   sites: { name: string; link: string }[];
