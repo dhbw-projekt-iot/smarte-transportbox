@@ -15,6 +15,11 @@ router.get("/current", async (req, res) => {
         deviceID
     }).catch(res.status(400).json);
 
+    if (!transportationTask) {
+        res.status(404).send();
+        return;
+    }
+
     res.json({
         deviceID,
         description: transportationTask.description,
@@ -34,6 +39,11 @@ router.get("/", async (req, res) => {
     const transportationTask = await transportationTaskModel.findOne({
         deviceID
     }).catch(res.status(400).json);
+
+    if (!transportationTask) {
+        res.status(404).send();
+        return;
+    }
 
     res.json({
         deviceID,
