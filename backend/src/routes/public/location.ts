@@ -49,7 +49,7 @@ router.get("/", async (req, res) => {
         deviceID,
         description: transportationTask.description,
         // TODO: Ensure if sorting is correct
-        locations: transportationTask.measurements.map(measurement => measurement.location)
+        locations: transportationTask.measurements.map((measurement: any)  => measurement.location)
     });
 });
 

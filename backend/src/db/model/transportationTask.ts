@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const {Schema} = mongoose;
 
-const schema = mongoose.Schema({
+const schema = new mongoose.Schema({
     deviceID: {
         type: "string",
         required: true,
