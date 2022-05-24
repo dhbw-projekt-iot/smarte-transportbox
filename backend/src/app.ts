@@ -20,5 +20,5 @@ app.use("/internal/", internalRoutes);
 app.use("/public/", publicRoutes);
 
 app.listen(PORT, () => {
-    console.log(`Backend running on port ${PORT}`);
+	console.log(`Backend running on port ${PORT}`);
 });
