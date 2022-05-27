@@ -16,7 +16,7 @@ const people = [
     bio: 'Ultricies massa malesuada viverra cras lobortis. Tempor orci hac ligula dapibus mauris sit ut eu. Eget turpis urna maecenas cras. Nisl dictum.',
   },
   {
-    name: 'Patrick Pfenningsdorf',
+    name: 'Patrick Pfennigsdorf',
     role: 'Entwickler',
     imagePath: PictureLuis,
     bio: 'Ultricies massa malesuada viverra cras lobortis. Tempor orci hac ligula dapibus mauris sit ut eu. Eget turpis urna maecenas cras. Nisl dictum.',
@@ -70,7 +70,7 @@ const Landing = () => {
                     <p className='mt-3 text-base text-gray-100 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl'>
                       Wir befinden uns gerade im Entwicklungsprozess der
                       intelligenten Transportbox. Auf unserer Website
-                      präsentieren wie Updates und die Fortschritte im
+                      präsentieren wir Updates und die Fortschritte im
                       Entwicklugnsprozess.
                     </p>
                     <div className='mt-10 sm:mt-12'>
