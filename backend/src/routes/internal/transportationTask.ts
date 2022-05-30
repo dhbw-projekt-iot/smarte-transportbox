@@ -2,6 +2,7 @@ import express from "express";
 const router = express.Router();
 
 import model from "../../db/model/transportationTask.js";
+import deviceModel from "../../db/model/device.js";
 
 router.get("/", async (_, res) => {
 	res.json(await model.find());
@@ -63,6 +64,26 @@ router.delete("/:id", async (req, res) => {
 
 	const deleted = await model.findByIdAndDelete(id);
 	res.status(200).json(deleted);
+});
+
+router.get("/:device/current", async (req, res) => {
+	const {device: deviceID} = req.params;
+
+	const device = await deviceModel.findById(deviceID).catch(error => res.status(400).json(error));
+
+	if (!device) {
+		res.status(404).send("Device does not exist.");
+		return;
+	}
+
+	const transportationTasks = await model.find({deviceID}).catch(error => res.status(500).json(error));
+
+	if (!transportationTasks || (transportationTasks as any).length === 0) {
+		res.status(404).send("No transportation tasks for this device");
+		return;
+	}
+
+	res.json((transportationTasks as any[])[0]);
 });
 
 export default router;
