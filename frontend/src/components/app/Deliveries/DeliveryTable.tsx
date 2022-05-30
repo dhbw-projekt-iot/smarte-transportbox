@@ -14,14 +14,20 @@ import {
   HiPlus,
 } from 'react-icons/hi';
 import { testData } from './testData';
+import { useNavigate } from 'react-router';
 const data: any = testData;
 
 const DeliveryTable = () => {
   const [Deliveries, setDeliveries] = useState([]);
+  let navigate = useNavigate();
 
-  //Daten die aus dem Backend gezogen wurden in Variable speichern
+  const showDetails = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    id: string,
+  ) => {
+    navigate('/app/delivery/' + id);
+  };
 
-  //Definitionen der Spalten
   const columns: any = useMemo(
     () => [
       {
@@ -91,6 +97,7 @@ const DeliveryTable = () => {
           <button
             className='text-indigo-700 hover:text-indigo-700'
             value='edit'
+            onClick={(e) => showDetails(e, cell.row.values.id)}
           >
             Details
           </button>
