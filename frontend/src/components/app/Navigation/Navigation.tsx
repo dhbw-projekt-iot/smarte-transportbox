@@ -1,33 +1,10 @@
 import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import {
-  HiOutlineAdjustments,
-  HiHome,
-  HiMenu,
-  HiOutlinePaperAirplane,
-  HiX,
-} from 'react-icons/hi';
-import PictureLuis from '../../assets/picture_luis.png';
-
-const navigation = [
-  { name: 'Dashboard', href: '#', icon: HiHome, current: true },
-  {
-    name: 'Sendungen',
-    href: '#',
-    icon: HiOutlinePaperAirplane,
-    current: false,
-  },
-  {
-    name: 'Flottenübersicht',
-    href: '#',
-    icon: HiOutlineAdjustments,
-    current: false,
-  },
-];
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ');
-}
+import { HiMenu, HiX } from 'react-icons/hi';
+import PictureLuis from '../../../assets/picture_luis.png';
+import { NavLink } from 'react-router-dom';
+import { navItems } from './NavItems';
+import { classNames } from '../../../utils/classNames';
 
 const Navigation = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -99,28 +76,25 @@ const Navigation = () => {
                       </h1>
                     </div>
                     <nav className='mt-5 px-2 space-y-1'>
-                      {navigation.map((item) => (
-                        <a
+                      {navItems.map((item) => (
+                        <NavLink
                           key={item.name}
-                          href={item.href}
-                          className={classNames(
-                            item.current
-                              ? 'bg-gray-900 text-white'
-                              : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                            'group flex items-center px-2 py-2 text-base font-medium rounded-md',
-                          )}
+                          to={item.route}
+                          className={({ isActive }) =>
+                            classNames(
+                              isActive
+                                ? 'bg-gray-900 text-white'
+                                : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                              'group flex items-center px-2 py-2 text-base font-medium rounded-md',
+                            )
+                          }
                         >
                           <item.icon
-                            className={classNames(
-                              item.current
-                                ? 'text-gray-300'
-                                : 'text-gray-400 group-hover:text-gray-300',
-                              'mr-4 flex-shrink-0 h-6 w-6',
-                            )}
+                            className='mr-4 flex-shrink-0 h-6 w-6 text-gray-400 group-hover:text-gray-300'
                             aria-hidden='true'
                           />
                           {item.name}
-                        </a>
+                        </NavLink>
                       ))}
                     </nav>
                   </div>
@@ -155,7 +129,7 @@ const Navigation = () => {
         </Transition.Root>
 
         {/* Static sidebar for desktop */}
-        <div className='hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0'>
+        <div className='hidden transition-all ease-in-out duration-500 transform md:flex md:w-64 md:flex-col md:fixed md:inset-y-0'>
           {/* Sidebar component, swap this element with another sidebar if you like */}
           <div className='flex-1 flex flex-col min-h-0 bg-gray-800'>
             <div className='flex-1 flex flex-col pt-5 pb-4 overflow-y-auto'>
@@ -170,28 +144,25 @@ const Navigation = () => {
                 </h1>
               </div>
               <nav className='mt-5 flex-1 px-2 space-y-1'>
-                {navigation.map((item) => (
-                  <a
+                {navItems.map((item) => (
+                  <NavLink
                     key={item.name}
-                    href={item.href}
-                    className={classNames(
-                      item.current
-                        ? 'bg-gray-900 text-white'
-                        : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                      'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
-                    )}
+                    to={item.route}
+                    className={({ isActive }) =>
+                      classNames(
+                        isActive
+                          ? 'bg-gray-900 text-white'
+                          : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                        'group flex items-center px-2 py-2 text-sm font-medium rounded-md',
+                      )
+                    }
                   >
                     <item.icon
-                      className={classNames(
-                        item.current
-                          ? 'text-gray-300'
-                          : 'text-gray-400 group-hover:text-gray-300',
-                        'mr-3 flex-shrink-0 h-6 w-6',
-                      )}
+                      className='mr-3 flex-shrink-0 h-6 w-6 text-gray-400 group-hover:text-gray-300'
                       aria-hidden='true'
                     />
                     {item.name}
-                  </a>
+                  </NavLink>
                 ))}
               </nav>
             </div>
@@ -229,22 +200,6 @@ const Navigation = () => {
               <HiMenu className='h-6 w-6' aria-hidden='true' />
             </button>
           </div>
-          <main className='flex-1'>
-            <div className='py-6'>
-              <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-                <h1 className='text-2xl font-semibold text-gray-900'>
-                  Dashboard
-                </h1>
-              </div>
-              <div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8'>
-                {/* Replace with your content */}
-                <div className='py-4'>
-                  <div className='border-4 border-dashed border-gray-200 rounded-lg h-96' />
-                </div>
-                {/* /End replace */}
-              </div>
-            </div>
-          </main>
         </div>
       </div>
     </>
