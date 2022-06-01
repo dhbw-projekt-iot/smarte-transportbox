@@ -20,7 +20,7 @@ try:
         else:
             print("Kein Signal erkannt")
 
-        time.sleep(0.1)
+        time.sleep(1)
 
 except KeyboardInterrupt:
     GPIO.cleanup()
