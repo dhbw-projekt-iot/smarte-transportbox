@@ -1,6 +1,7 @@
 import glob
 import time
 from time import sleep
+from tokenize import Double
 import RPi.GPIO as GPIO
 
 sleeptime = 1
@@ -25,9 +26,11 @@ device_file = device_folder + "/w1_slave"
 def measurement():
     f = open(device_file, "r")
     print("Opened file")
-    lines = f.readlines()
-    print(lines)
+    lines = f.readlines()[1][29:-1]
+    temp = int(lines)
+    print(temp/1000)
     f.close()
-    return lines
+    return temp
 
-measurement()
+while True:
+    measurement()
