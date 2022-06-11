@@ -14,12 +14,13 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 const createRoutineMachineLayer = (props) => {
   const instance = L.Routing.control({
+    show: false,
     waypoints: [L.latLng(49.0272, 8.38526), L.latLng(48.99839, 8.33542)],
     waypointMode: 'snap',
-    show: false,
+    collapsible: true,
     addWaypoints: false,
     routeWhileDragging: true,
-    fitSelectedRoutes: true,
+    fitSelectedRoutes: false,
     showAlternatives: false,
   });
 
