@@ -19,7 +19,7 @@ const Logged = () => {
       <div className='flex space-x-4'>
         <Link
           className='block px-3 py-2 rounded-md text-base font-medium bg-white text-blue-700 hover:bg-gray-200'
-          to={'/Login'}
+          to={'/app'}
         >
           Anmelden
         </Link>

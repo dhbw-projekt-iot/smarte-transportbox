@@ -15,10 +15,12 @@ import {
 } from 'react-icons/hi';
 import { testData } from './testData';
 import { useNavigate } from 'react-router';
+import NewDelivery from './NewDelivery';
 const data: any = testData;
 
 const DeliveryTable = () => {
   const [Deliveries, setDeliveries] = useState([]);
+  const [open, setOpen] = useState(false);
   let navigate = useNavigate();
 
   const showDetails = (
@@ -130,6 +132,7 @@ const DeliveryTable = () => {
   // return Element
   return (
     <>
+      <NewDelivery open={open} setOpen={setOpen} />
       <div className='w-full sm:flex'>
         <div className='w-full flex justify-between gap-4 pb-4'>
           <DeliveryFilter filter={globalFilter} setFilter={setGlobalFilter} />
@@ -137,6 +140,7 @@ const DeliveryTable = () => {
           <button
             type='button'
             className='focus:outline-none rounded-full border border-transparent bg-indigo-700 hover:bg-indigo-900 p-2 text-white shadow-sm focus:ring-2 focus:ring-indigo-900 focus:ring-offset-2'
+            onClick={() => setOpen(true)}
           >
             <HiPlus className='w-7 h-7' />
           </button>
