@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import Charts from './Charts';
 import Incidents from './Incidents';
+import GMap from './Map';
 
 const Delivery = () => {
   let params = useParams();
@@ -19,6 +20,7 @@ const Delivery = () => {
           <div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-8'>
             <Incidents />
             <Charts />
+            <GMap />
           </div>
         </div>
       </main>
