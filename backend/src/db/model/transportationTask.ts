@@ -9,25 +9,32 @@ const schema = new mongoose.Schema({
 		ref: "Device",
 		required: true,
 	},
-	// productType: {
-
-	// },
 	measurements: [
 		{
 			type: Schema.Types.ObjectId,
 			ref: "Measurement"
 		}
 	],
+	incidents: [
+		{
+			type: Schema.Types.ObjectId,
+			ref: "Incident"
+		}
+	],
 	constraints: {
 		type: constraintsSchema,
-		required: true
+		// Are they required?
+		// required: true
 	},
 	// Metadata
 	productDescription: String,
+	productType: String,
 	shippingID: String,
 	fromLocation: String,
 	toLocation: String,
 	ownerMail: String,
+	createdAt: Date,
+	status: String
 });
 
 export default mongoose.model("TransportationTask", schema);
