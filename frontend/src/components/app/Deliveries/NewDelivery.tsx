@@ -72,7 +72,7 @@ const NewDelivery = ({ open, setOpen }: newDeliveryProps) => {
                           htmlFor='departure'
                           className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-1'
                         >
-                          Beschreibung der Sendung
+                          Produktart
                         </label>
                         <div className='mt-2 mb-2 sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'>
                           <select
@@ -95,7 +95,7 @@ const NewDelivery = ({ open, setOpen }: newDeliveryProps) => {
                           htmlFor='departure'
                           className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-1'
                         >
-                          Produktart
+                          Beschreibung der Sendung
                         </label>
                         <div className='mt-2 mb-2 sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'>
                           <textarea
@@ -103,7 +103,7 @@ const NewDelivery = ({ open, setOpen }: newDeliveryProps) => {
                             name='about'
                             rows={3}
                             className='shadow-sm block w-full focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border border-gray-300 rounded-md'
-                            defaultValue='Beschreibung der Sendung einfügen.'
+                            placeholder='Beschreibung der Sendung einfügen.'
                           />
                         </div>
                       </div>

@@ -9,6 +9,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import { testData } from '../testData';
 
 ChartJS.register(
   CategoryScale,
@@ -19,15 +20,6 @@ ChartJS.register(
   Tooltip,
   Legend,
 );
-
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'bottom' as const,
-    },
-  },
-};
 
 const labels = [
   '00:00',
@@ -44,19 +36,57 @@ const labels = [
   '22:00',
 ];
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Luftfeuchtigkeitsverlauf in Prozent',
-      data: [10, 12, 30, 28, 32, 15, 17, 20, 25, 22, 26, 21],
-      borderColor: '#6366f1',
-      backgroundColor: '#6366f1',
-    },
-  ],
-};
+const HumidityChart = ({ id }) => {
+  const minThreshold = {
+    type: 'line',
+    yMin: testData[id].humidityData.min,
+    yMax: testData[id].humidityData.min,
+    borderColor: 'rgb(255, 99, 132)',
+    borderWidth: 4,
+  };
 
-const HumidityChart = () => {
+  const maxThreshold = {
+    type: 'line',
+    yMin: testData[id].humidityData.max,
+    yMax: testData[id].humidityData.max,
+    borderColor: 'rgb(255, 99, 132)',
+    borderWidth: 4,
+  };
+
+  const options: any = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom' as const,
+      },
+      annotation: {
+        annotations: {
+          maxThreshold,
+          minThreshold,
+        },
+      },
+    },
+  };
+
+  let dataArray: any = [];
+  testData.map((delivery) => {
+    if (delivery.id === id) {
+      dataArray = delivery.humidityData.data;
+    }
+  });
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: 'Luftfeuchtigkeitsverlauf in Prozent',
+        data: dataArray,
+        borderColor: '#6366f1',
+        backgroundColor: '#6366f1',
+      },
+    ],
+  };
+
   return <Line options={options} data={data} />;
 };
 

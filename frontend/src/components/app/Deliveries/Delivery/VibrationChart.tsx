@@ -9,6 +9,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import { testData } from '../testData';
 
 ChartJS.register(
   CategoryScale,
@@ -44,19 +45,57 @@ const labels = [
   '22:00',
 ];
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Erschütterungen in Anzahl',
-      data: [40, 43, 48, 50, 46, 50, 56, 52, 57, 58, 54, 56],
-      borderColor: '#6366f1',
-      backgroundColor: '#6366f1',
-    },
-  ],
-};
+const VibrationChart = ({ id }) => {
+  const minThreshold = {
+    type: 'line',
+    yMin: testData[id].vibrationData.min,
+    yMax: testData[id].vibrationData.min,
+    borderColor: 'rgb(255, 99, 132)',
+    borderWidth: 4,
+  };
 
-const VibrationChart = () => {
+  const maxThreshold = {
+    type: 'line',
+    yMin: testData[id].vibrationData.max,
+    yMax: testData[id].vibrationData.max,
+    borderColor: 'rgb(255, 99, 132)',
+    borderWidth: 4,
+  };
+
+  const options: any = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom' as const,
+      },
+      annotation: {
+        annotations: {
+          maxThreshold,
+          minThreshold,
+        },
+      },
+    },
+  };
+
+  let dataArray: any = [];
+  testData.map((delivery) => {
+    if (delivery.id === id) {
+      dataArray = delivery.vibrationData.data;
+    }
+  });
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: 'Erschütterungen in Anzahl',
+        data: dataArray,
+        borderColor: '#6366f1',
+        backgroundColor: '#6366f1',
+      },
+    ],
+  };
+
   return <Line options={options} data={data} />;
 };
 

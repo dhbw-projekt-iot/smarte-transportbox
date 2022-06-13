@@ -9,6 +9,7 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
+import { testData } from '../testData';
 
 ChartJS.register(
   CategoryScale,
@@ -19,15 +20,6 @@ ChartJS.register(
   Tooltip,
   Legend,
 );
-
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'bottom' as const,
-    },
-  },
-};
 
 const labels = [
   '00:00',
@@ -44,19 +36,57 @@ const labels = [
   '22:00',
 ];
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Neigungsvorfälle',
-      data: [40, 43, 48, 50, 46, 50, 56, 52, 57, 58, 54, 56],
-      borderColor: '#6366f1',
-      backgroundColor: '#6366f1',
-    },
-  ],
-};
+const TiltChart = ({ id }) => {
+  const minThreshold = {
+    type: 'line',
+    yMin: testData[id].tiltData.min,
+    yMax: testData[id].tiltData.min,
+    borderColor: 'rgb(255, 99, 132)',
+    borderWidth: 4,
+  };
 
-const TiltChart = () => {
+  const maxThreshold = {
+    type: 'line',
+    yMin: testData[id].tiltData.max,
+    yMax: testData[id].tiltData.max,
+    borderColor: 'rgb(255, 99, 132)',
+    borderWidth: 4,
+  };
+
+  const options: any = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom' as const,
+      },
+      annotation: {
+        annotations: {
+          maxThreshold,
+          minThreshold,
+        },
+      },
+    },
+  };
+
+  let dataArray: any = [];
+  testData.map((delivery) => {
+    if (delivery.id === id) {
+      dataArray = delivery.tiltData.data;
+    }
+  });
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: 'Neigungsvorfälle',
+        data: dataArray,
+        borderColor: '#6366f1',
+        backgroundColor: '#6366f1',
+      },
+    ],
+  };
+
   return <Line options={options} data={data} />;
 };
 
