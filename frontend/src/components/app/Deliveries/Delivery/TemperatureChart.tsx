@@ -8,9 +8,13 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import annotationPlugin from 'chartjs-plugin-annotation';
+
 import { Line } from 'react-chartjs-2';
+import { testData } from '../testData';
 
 ChartJS.register(
+  annotationPlugin,
   CategoryScale,
   LinearScale,
   PointElement,
@@ -19,15 +23,6 @@ ChartJS.register(
   Tooltip,
   Legend,
 );
-
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'bottom' as const,
-    },
-  },
-};
 
 const labels = [
   '00:00',
@@ -43,20 +38,57 @@ const labels = [
   '20:00',
   '22:00',
 ];
+const TemperatureChart = ({ id }) => {
+  const minThreshold = {
+    type: 'line',
+    yMin: testData[id].temperatureData.min,
+    yMax: testData[id].temperatureData.min,
+    borderColor: 'rgb(255, 99, 132)',
+    borderWidth: 4,
+  };
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Temperaturverlauf in Grad Celsius',
-      data: [40, 43, 48, 50, 46, 50, 56, 52, 57, 58, 54, 56],
-      borderColor: '#6366f1',
-      backgroundColor: '#6366f1',
+  const maxThreshold = {
+    type: 'line',
+    yMin: testData[id].temperatureData.max,
+    yMax: testData[id].temperatureData.max,
+    borderColor: 'rgb(255, 99, 132)',
+    borderWidth: 4,
+  };
+
+  const options: any = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'bottom' as const,
+      },
+      annotation: {
+        annotations: {
+          maxThreshold,
+          minThreshold,
+        },
+      },
     },
-  ],
-};
+  };
 
-const TemperatureChart = () => {
+  let dataArray: any = [];
+  testData.map((delivery) => {
+    if (delivery.id === id) {
+      dataArray = delivery.temperatureData.data;
+    }
+  });
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: 'Temperaturverlauf in Grad Celsius',
+        data: dataArray,
+        borderColor: '#6366f1',
+        backgroundColor: '#6366f1',
+      },
+    ],
+  };
+
   return <Line options={options} data={data} />;
 };
 
