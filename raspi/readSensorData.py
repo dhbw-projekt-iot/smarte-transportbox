@@ -55,7 +55,7 @@ def getHumidity(DHTSensor, GPIO_Pin):
 device_id = {"cdf"}
 
 #open file
-file = open("config.txt", "w")
+file = open("config.txt.gitignore", "w")
 
 #variable to string
 str = repr(device_id)
@@ -65,18 +65,18 @@ file.write("device_id = " + str + "\n")
 file.close()
 
 def checkDeviceId():
-    f = open("config.txt", "r")
+    f = open("config.txt.gitignore", "r")
 
     deviceIdFromConfig = f.readline()[14:-3]
     f.close()
 
     if len(deviceIdFromConfig) > 1:
         deviceId = deviceIdFromConfig
-        return 1
+        return True
     else:
-        return 0
+        return False
 
-if checkDeviceId() != 1:
+if checkDeviceId() != True:
     deviceId = register()
 
 while True:
