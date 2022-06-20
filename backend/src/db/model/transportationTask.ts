@@ -23,8 +23,7 @@ const schema = new mongoose.Schema({
 	],
 	constraints: {
 		type: constraintsSchema,
-		// Are they required?
-		// required: true
+		required: true
 	},
 	// Metadata
 	productDescription: String,

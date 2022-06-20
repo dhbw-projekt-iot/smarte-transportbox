@@ -54,8 +54,18 @@ router.get("/:id/locations/current", async (req, res) => {
 	});
 });
 
+// Create new Transportation Task
 router.post("/", async (req, res) => {
-	const {productType, productDescription, fromLocation, toLocation, shippingID, ownerMail} = req.body;
+	const {
+		productType, 
+		productDescription, 
+		fromLocation, 
+		toLocation, 
+		shippingID, 
+		ownerMail,
+		constraints
+	} = req.body;
+
 	const created = await taskModel.create({
 		productDescription,
 		productType,
@@ -65,7 +75,7 @@ router.post("/", async (req, res) => {
 		ownerMail,
 		status: "Created",
 		createdAt: new Date(),
-		constraints: null,
+		constraints,
 		incidents: [],
 		measurements: [],
 	});

@@ -7,6 +7,8 @@ import taskModel from "../../db/model/transportationTask.js";
 import measurementModel from "../../db/model/measurement.js";
 import incidentModel from "../../db/model/incident.js";
 
+import { handleIncident}  from "../../logic/handleIncident.js";
+
 async function determineCurrentTask(id: ObjectId, res: Response) {
 	if (!id) {
 		res.status(400).send("A device id must be passed.");
@@ -73,8 +75,10 @@ router.get("/pushIncident", async (req, res) => {
 		res.status(400).send("Incident cannot be pushed since no task exists for the used device");
 		return;
 	}
-	const { _dummy } = incident;
-	const created = await measurementModel.create({
+	const { timestamp, sensor, value } = incident;
+	const created = await incidentModel.create({
+		timestamp,
+		sensor, value
 	});
 	const incidentID = created["_id"];
 	const newIDs = [...currentTask.incidents, ...incidentID];
@@ -84,6 +88,9 @@ router.get("/pushIncident", async (req, res) => {
 	{
 		new: true
 	});
+
+	handleIncident(currentTask.ownerMail, currentTask, incident);
+
 	res.status(200).send("Updated Incidents.");
 });
 
