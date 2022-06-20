@@ -22,7 +22,7 @@ const schema = new mongoose.Schema({
 		}
 	],
 	constraints: {
-		type: constraintsSchema,
+		type: constraintsSchema.schema,
 		required: true
 	},
 	// Metadata
