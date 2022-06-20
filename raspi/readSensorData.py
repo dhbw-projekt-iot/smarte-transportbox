@@ -1,7 +1,11 @@
 import glob
 
-from register import register
+from numpy import var
 
+from register import register
+from currentJob import currentJob
+
+import json
 import time
 import Adafruit_DHT
 from time import sleep
@@ -9,12 +13,14 @@ from tokenize import Double
 import RPi.GPIO as GPIO
 import sys
 
-deviceId = ""
-
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(4, GPIO.IN, pull_up_down = GPIO.PUD_UP)
 
-# temperature sensor
+############################################################
+############################################################
+############################################################
+############################################################
+############################## Get temp
 base_dir = "/sys/bus/w1/devices/"
 while True:
     try:
@@ -35,7 +41,11 @@ def getTemperature():
     print("Temp", temp)
     return temp
 
-# humidity sensor
+############################################################
+############################################################
+############################################################
+############################################################
+############################## Get humidity
 sleeptime = 1
 DHTSensor = Adafruit_DHT.DHT11
 
@@ -49,50 +59,67 @@ def getHumidity(DHTSensor, GPIO_Pin):
     print("Humidity", Humidity)
     return Humidity
 
-#check Device ID
+############################################################
+############################################################
+############################################################
+############################################################
+############################## Device ID
 
-#input deviceId
-device_id = {"cdf"}
+def getDeviceId():
+    deviceId = {"cdf"}
 
-#open file
-file = open("config.txt.gitignore", "w")
+    file = open("config.txt.gitignore", "w")
 
-#variable to string
-str = repr(device_id)
-file.write("device_id = " + str + "\n")
+    str = repr(deviceId)
+    file.write("device_id = " + str + "\n")
 
-#close file
-file.close()
+    file.close()
 
-def checkDeviceId():
-    f = open("config.txt.gitignore", "r")
+    configFile = open("config.txt.gitignore", "r")
 
-    deviceIdFromConfig = f.readline()[14:-3]
-    f.close()
+    deviceIdFromConfig = configFile.readline()[14:-3]
+    configFile.close()
 
+    print(len(deviceIdFromConfig))
     if len(deviceIdFromConfig) > 1:
         deviceId = deviceIdFromConfig
         return True
     else:
+        deviceId = register()
         return False
+    
 
-if checkDeviceId() != True:
-    deviceId = register()
+############################################################
+############################################################
+############################################################
+############################################################
+############################## Check task
 
-data = ""
 
-def getCurrentTask():
+def getCurrentJob():
+    currentJob = {"a":54, "b":87}
+    
+    with open("currentTask.json.gitignore", "w", encoding="utf-8") as jobFile:
+        json.dump(currentJob, jobFile, ensure_ascii=False, indent=4)
 
-    currentTaskFile = open("currentTask.json.gitignore", "r")
+    with open("currentTask.json.gitignore", "r") as jobFile:
+        currentJob=jobFile.read()
 
-    if len(currentTaskFile) > 1:
+    currentJobJSON = json.loads(currentJob)
+
+    print(len(currentJobJSON))
+    if len(currentJobJSON) > 1:
         print("Task vorhanden")
     else:
-        import json
-        with open("currentTask.json.gitignore", "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
+        currentJob = currentJob()
+        print("Hier")
+        with open("currentTask.json.gitignore", "w", encoding="utf-8") as jobFile:
+            json.dump(currentJob, jobFile, ensure_ascii=False, indent=4)
+        
 
+getCurrentJob()
+getDeviceId()
 
-while True:
-    getTemperature()
-    getHumidity(DHTSensor, GPIO_Pin=23)
+#while True:
+    #getTemperature()
+    #getHumidity(DHTSensor, GPIO_Pin=23)
