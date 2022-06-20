@@ -79,6 +79,20 @@ def checkDeviceId():
 if checkDeviceId() != True:
     deviceId = register()
 
+data = ""
+
+def getCurrentTask():
+
+    currentTaskFile = open("currentTask.json.gitignore", "r")
+
+    if len(currentTaskFile) > 1:
+        print("Task vorhanden")
+    else:
+        import json
+        with open("currentTask.json.gitignore", "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+
+
 while True:
     getTemperature()
     getHumidity(DHTSensor, GPIO_Pin=23)
