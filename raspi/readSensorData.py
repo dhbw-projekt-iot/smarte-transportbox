@@ -1,10 +1,8 @@
-import glob
-
 from numpy import var
-
 from register import register
 from currentJob import currentJob
 
+import glob
 import json
 import time
 import Adafruit_DHT
@@ -68,14 +66,14 @@ def getHumidity(DHTSensor, GPIO_Pin):
 def getDeviceId():
     deviceId = {"cdf"}
 
-    file = open("config.txt.gitignore", "w")
+    file = open("config.txt", "w")
 
     str = repr(deviceId)
     file.write("device_id = " + str + "\n")
 
     file.close()
 
-    configFile = open("config.txt.gitignore", "r")
+    configFile = open("config.txt", "r")
 
     deviceIdFromConfig = configFile.readline()[14:-3]
     configFile.close()
@@ -99,10 +97,10 @@ def getDeviceId():
 def getCurrentJob():
     currentJob = {"a":54, "b":87}
     
-    with open("currentTask.json.gitignore", "w", encoding="utf-8") as jobFile:
+    with open("currentJob.json", "w", encoding="utf-8") as jobFile:
         json.dump(currentJob, jobFile, ensure_ascii=False, indent=4)
 
-    with open("currentTask.json.gitignore", "r") as jobFile:
+    with open("currentJob.json", "r") as jobFile:
         currentJob=jobFile.read()
 
     currentJobJSON = json.loads(currentJob)
@@ -113,13 +111,19 @@ def getCurrentJob():
     else:
         currentJob = currentJob()
         print("Hier")
-        with open("currentTask.json.gitignore", "w", encoding="utf-8") as jobFile:
+        with open("currentJob.json", "w", encoding="utf-8") as jobFile:
             json.dump(currentJob, jobFile, ensure_ascii=False, indent=4)
-        
+      
+
+############################################################
+############################################################
+############################################################
+############################################################
+############################## do it!  
 
 getCurrentJob()
 getDeviceId()
 
-#while True:
-    #getTemperature()
-    #getHumidity(DHTSensor, GPIO_Pin=23)
+while True:
+    getTemperature()
+    getHumidity(DHTSensor, GPIO_Pin=23)
