@@ -1,10 +1,14 @@
+from sqlite3 import Timestamp
 from numpy import var
 from register import register
 from currentJob import currentJob
+from datetime import datetime as DateTime
 
 import glob
 import json
 import time
+import pytz
+import json_lines
 import Adafruit_DHT
 from time import sleep
 from tokenize import Double
@@ -13,6 +17,9 @@ import sys
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(4, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+
+#sleep for x seconds
+readSensorDataIntervall = 5
 
 ############################################################
 ############################################################
@@ -33,11 +40,10 @@ device_file = device_folder + "/w1_slave"
 def getTemperature():
     f = open(device_file, "r")
     lines = f.readlines()[1][29:-1]
-    temp = int(lines)/1000
+    temperature = int(lines)/1000
     f.close()
 
-    print("Temp", temp)
-    return temp
+    return temperature
 
 ############################################################
 ############################################################
@@ -50,12 +56,11 @@ DHTSensor = Adafruit_DHT.DHT11
 def getHumidity(DHTSensor, GPIO_Pin):
 
     try:
-        Humidity, Temperature = Adafruit_DHT.read_retry(DHTSensor, GPIO_Pin)
+        humidity, temperature = Adafruit_DHT.read_retry(DHTSensor, GPIO_Pin)
     except KeyboardInterrupt:
         sys.exit(0)
 
-    print("Humidity", Humidity)
-    return Humidity
+    return humidity
 
 ############################################################
 ############################################################
@@ -63,28 +68,29 @@ def getHumidity(DHTSensor, GPIO_Pin):
 ############################################################
 ############################## Device ID
 
-def getDeviceId():
-    deviceId = {"cdf"}
+def getDeviceID():
+    # remove after testing
+    deviceID = {"a"}
 
     file = open("config.txt", "w")
 
-    str = repr(deviceId)
-    file.write("device_id = " + str + "\n")
+    str = repr(deviceID)
+    file.write(str)
 
     file.close()
+    ######
 
     configFile = open("config.txt", "r")
 
-    deviceIdFromConfig = configFile.readline()[14:-3]
+    deviceIdFromConfig = configFile.readline()[2:-2]
     configFile.close()
 
-    print(len(deviceIdFromConfig))
-    if len(deviceIdFromConfig) > 1:
-        deviceId = deviceIdFromConfig
-        return True
+    if len(deviceIdFromConfig) >= 1:
+        deviceID = deviceIdFromConfig
+        return deviceID
     else:
-        deviceId = register()
-        return False
+        deviceID = register()
+        return deviceID
     
 
 ############################################################
@@ -94,25 +100,24 @@ def getDeviceId():
 ############################## Check task
 
 
-def getCurrentJob():
-    currentJob = {"a":54, "b":87}
+def getCurrentJob(deviceID):
+    job = {"a":54, "b":87}
     
-    with open("currentJob.json", "w", encoding="utf-8") as jobFile:
-        json.dump(currentJob, jobFile, ensure_ascii=False, indent=4)
+    with open("currentJob.json", "w", encoding="utf-8") as JobFile:
+        json.dump(job, JobFile, ensure_ascii=False, indent=4)
 
-    with open("currentJob.json", "r") as jobFile:
-        currentJob=jobFile.read()
+    with open("currentJob.json", "r") as readJobFile:
+        job=readJobFile.read()
 
-    currentJobJSON = json.loads(currentJob)
+    currentJobJSON = json.loads(job)
 
-    print(len(currentJobJSON))
     if len(currentJobJSON) > 1:
-        print("Task vorhanden")
+        return currentJobJSON
     else:
-        currentJob = currentJob()
-        print("Hier")
-        with open("currentJob.json", "w", encoding="utf-8") as jobFile:
-            json.dump(currentJob, jobFile, ensure_ascii=False, indent=4)
+        job = currentJob(deviceID)
+        with open("currentJob.json", "w", encoding="utf-8") as JobFile:
+            json.dump(job, JobFile, ensure_ascii=False, indent=4)
+        return job
       
 
 ############################################################
@@ -121,9 +126,48 @@ def getCurrentJob():
 ############################################################
 ############################## do it!  
 
-getCurrentJob()
-getDeviceId()
+deviceID = getDeviceID()
+currentJob = getCurrentJob(deviceID)
+
+def readSensorData():
+    temperature = getTemperature()
+    humidity = getHumidity(DHTSensor, GPIO_Pin=23)
+
+    print("Temperature: ",temperature)
+    print("Humidity: ",humidity)
+
+    return temperature, humidity
+
+def measurementDic():
+    timestamp = DateTime.isoformat(DateTime.now(pytz.timezone('Europe/Berlin')))
+
+    temperature, humidity = readSensorData()
+
+    measurement = {
+        "timestamp": timestamp,
+        "temperature": temperature,
+        "humidity": humidity
+    }
+    return measurement
+
+def createJSONData(measurement):
+    jsonData = []
+    jsonData.append(measurement)
+    return jsonData
+
+def createJSONFile(jsonData):
+    with open("measurement.json", "a") as jsonFile:
+        for data in jsonData:
+            json.dump(data, jsonFile)
+            jsonFile.write("\n")
+            jsonData = []
+    with open("measurement.json", "rb") as jsonFile:
+        for line in json_lines.reader(jsonFile):
+            jsonData.append(line)
+
+def writeMeasurementsIntoFile():
+    print("Test") 
 
 while True:
-    getTemperature()
-    getHumidity(DHTSensor, GPIO_Pin=23)
+    createJSONFile(createJSONData(measurementDic()))
+    sleep(readSensorDataIntervall)
