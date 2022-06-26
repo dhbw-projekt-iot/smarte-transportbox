@@ -17,7 +17,7 @@ services:
     ports:
       - '4004:4004'
     networks:
-      - bohoo
+      - scoobydoo
   frontend:
     restart: unless-stopped
     environment:
@@ -35,9 +35,9 @@ services:
     ports:
       - '3004:3004'
     networks:
-      - bohoo
+      - scoobydoo
 volumes:
   mongo:
 networks:
-  bohoo:
+  scoobydoo:
     external: true
