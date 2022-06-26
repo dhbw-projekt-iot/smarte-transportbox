@@ -45,7 +45,7 @@ test-job: # This job runs in the test stage.
     - echo "Tests run successfully"
 
 deploy-job: # This job runs in the deploy stage.
-  stage: deploy-pre-prod # It only runs when triggered manually
+  stage: deploy-pre-prod
   only:
     - pre-production
   script:
