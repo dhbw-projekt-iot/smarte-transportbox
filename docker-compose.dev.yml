@@ -3,9 +3,8 @@ services:
   backend:
     build:
       context: ./backend
-      target: production
+      target: dev
     volumes:
-      - ./backend:/usr/app
       - /usr/app/node_modules
     restart: unless-stopped
     environment:
@@ -27,21 +26,18 @@ services:
       - NODE_ENV=production
     build:
       context: ./frontend
-      target: development
+      target: production
       args:
         REACT_APP_BACKEND_URL: https://smart-box.one-calendar.de/api
         REACT_APP_FRONTEND_HOST: https://smart-box.one-calendar.de
     volumes:
-      - ./frontend:/usr/app
       - /usr/app/node_modules
     ports:
       - '3004:3004'
     networks:
       - scoobydoo
-    command: npm run start
 volumes:
-  frontend:
-  backend:
+  mongo:
 networks:
   scoobydoo:
     external: true
