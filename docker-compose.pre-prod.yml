@@ -26,7 +26,7 @@ services:
       - NODE_ENV=production
     build:
       context: ./frontend
-      target: development
+      target: dev
       args:
         REACT_APP_BACKEND_URL: https://smart-box.one-calendar.de/api
         REACT_APP_FRONTEND_HOST: https://smart-box.one-calendar.de
