@@ -26,6 +26,7 @@ router.get("/currentJob", async (req, res) => {
 	const {id: deviceID} = req.body;
 	const task = await determineCurrentTask(deviceID, res);
 	if (!task) {
+		res.status(404).send("No current task");
 		return;
 	}
 	res.status(200).json(task);

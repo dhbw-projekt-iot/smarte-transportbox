@@ -63,10 +63,12 @@ router.post("/", async (req, res) => {
 		toLocation, 
 		shippingID, 
 		ownerMail,
-		constraints
+		constraints,
+		deviceID
 	} = req.body;
 
 	const created = await taskModel.create({
+		deviceID,
 		productDescription,
 		productType,
 		fromLocation,
