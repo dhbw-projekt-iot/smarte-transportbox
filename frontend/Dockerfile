@@ -23,7 +23,7 @@ COPY nginx/nginx.conf etc/nginx/conf.d
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
 
-FROM node:lts-alpine as development
+FROM node:lts-alpine as dev
 
 WORKDIR /usr/app
 

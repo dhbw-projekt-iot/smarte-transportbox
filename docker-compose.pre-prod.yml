@@ -5,7 +5,6 @@ services:
       context: ./backend
       target: production
     volumes:
-      - ./backend:/usr/app
       - /usr/app/node_modules
     restart: unless-stopped
     environment:
@@ -32,13 +31,11 @@ services:
         REACT_APP_BACKEND_URL: https://smart-box.one-calendar.de/api
         REACT_APP_FRONTEND_HOST: https://smart-box.one-calendar.de
     volumes:
-      - ./frontend:/usr/app
       - /usr/app/node_modules
     ports:
       - '3004:3004'
     networks:
       - scoobydoo
-    command: npm run start
 volumes:
   frontend:
   backend:
