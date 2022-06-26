@@ -2,7 +2,7 @@ FROM node:16 as dev
 
 WORKDIR /var/app
 
-COPY package*.json .
+COPY package*.json ./
 
 RUN npm install
 
