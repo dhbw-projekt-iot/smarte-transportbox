@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ./backend
+      target: production
+    volumes:
+      - /usr/app/node_modules
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    environment:
+      - PORT=4004
+      - MONGO_URL=mongodb+srv://smart-box-service:3pKAqDxRQjWxceMi@cluster0.4ortpxt.mongodb.net/?retryWrites=true&w=majority
+      - INCIDENT_MAIL_HOST=smtp.ethereal.email
+      - INCIDENT_MAIL_PORT=587
+      - INCIDENT_MAIL_USERNAME
+      - INCIDENT_MAIL_PASSWORD
+    ports:
+      - '4004:4004'
+    networks:
+      - bohoo
+  frontend:
+    restart: unless-stopped
+    environment:
+      - REACT_APP_BACKEND_URL
+      - REACT_APP_FRONTEND_HOST
+      - NODE_ENV=production
+    build:
+      context: ./frontend
+      target: production
+      args:
+        REACT_APP_BACKEND_URL: https://smart-box.one-calendar.de/api
+        REACT_APP_FRONTEND_HOST: https://smart-box.one-calendar.de
+    volumes:
+      - /usr/app/node_modules
+    ports:
+      - '3004:3004'
+    networks:
+      - bohoo
+volumes:
+  mongo:
+networks:
+  bohoo:
+    external: true

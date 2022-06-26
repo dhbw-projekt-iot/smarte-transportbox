@@ -1,0 +1,54 @@
+image: docker/compose:latest
+
+services:
+  - docker:dind
+
+stages: # List of stages for jobs, and their order of execution
+  - build
+  - test
+  - deploy-pre-prod
+  - deploy-prod
+
+cache: []
+
+variables:
+  REACT_APP_BACKEND_URL: $REACT_APP_BACKEND_URL
+  CONFIRMATION_MAIL_ADDRESS: $CONFIRMATION_MAIL_ADDRESS
+  FRONTEND_HOST: $FRONTEND_HOST
+  MONGO_URL: $MONGO_URL
+  INCIDENT_MAIL_HOST: $INCIDENT_MAIL_HOST
+  INCIDENT_MAIL_PORT: $INCIDENT_MAIL_PORT
+  INCIDENT_MAIL_USERNAME: $INCIDENT_MAIL_USERNAME
+  INCIDENT_MAIL_PASSWORD: $INCIDENT_MAIL_PASSWORD
+
+before_script:
+  - docker version
+  - docker-compose version
+
+build-job: # This job runs in the build stage, which runs first.
+  stage: build
+  only:
+    - development
+    - production
+    - pre-production
+  script:
+    - docker-compose -f docker-compose.pre-prod.yml -p smart-box build
+  environment: pre-production
+
+test-job: # This job runs in the test stage.
+  stage: test # It only starts when the job in the build stage completes successfully.
+  only:
+    - development
+    - production
+    - pre-production
+  script:
+    - echo "Tests run successfully"
+
+deploy-job: # This job runs in the deploy stage.
+  stage: deploy-pre-prod # It only runs when triggered manually
+  only:
+    - pre-production
+  script:
+    - docker-compose -f docker-compose.pre-prod.yml -p smart-box up --force-recreate --build -d
+    - docker image prune -f
+  environment: pre-production

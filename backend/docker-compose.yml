@@ -1,11 +1,13 @@
 version: '3'
 services:
-  backend: 
+  backend:
     container_name: backend
     restart: always
-    build: .
-    ports: 
-      - "4004:4004"
+    build:
+      context: .
+      target: dev
+    ports:
+      - '4004:4004'
   mongodb:
     container_name: mongo
     image: mongo
