@@ -13,7 +13,7 @@ const initialState: eventState = {
 export const fetchTransportationTasks = createAsyncThunk(
   'transportationTask/fetchTransportationTasks',
   async (thunkAPI) => {
-    const response = await axios.get(BACKEND_URL);
+    const response = await axios.get(BACKEND_URL + '/public/tasks');
     return response;
   },
 );

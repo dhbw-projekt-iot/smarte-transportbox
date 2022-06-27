@@ -24,7 +24,7 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
+RUN npm run build:docker
 
 FROM node:lts-alpine as production
 
