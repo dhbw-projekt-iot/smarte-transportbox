@@ -12,6 +12,9 @@ import {
   HiOutlineChevronDoubleLeft,
   HiOutlineChevronDoubleRight,
   HiPlus,
+  HiMinusSm,
+  HiOutlineArrowSmDown,
+  HiOutlineArrowSmUp,
 } from 'react-icons/hi';
 import { useNavigate } from 'react-router';
 import NewDelivery from './NewDelivery';
@@ -175,65 +178,29 @@ const DeliveryTable = () => {
                           scope='col'
                           className={
                             column.width +
-                            'py-3 text-center text-xs text-gray-700 uppercase tracking-wider lg:text-left lg:pl-4 lg:pr-4'
+                            'py-2 text-center text-xs text-gray-700 uppercase tracking-wider lg:text-left lg:px-4'
                           }
                         >
-                          {column.render('Header')}
-                          {column.getHeaderProps(column.getSortByToggleProps())
-                            .key != 'header_edit' ? (
-                            <span className='inline-block'>
-                              {column.isSorted ? (
-                                column.isSortedDesc ? (
-                                  <svg
-                                    xmlns='http://www.w3.org/2000/svg'
-                                    className='h-3 w-3 ml-2 text-red-600'
-                                    fill='none'
-                                    viewBox='0 0 24 24'
-                                    stroke='currentColor'
-                                  >
-                                    <path
-                                      strokeLinecap='round'
-                                      strokeLinejoin='round'
-                                      strokeWidth={2}
-                                      d='M19 14l-7 7m0 0l-7-7m7 7V3'
-                                    />
-                                  </svg>
+                          <div className='flex '>
+                            {column.render('Header')}
+                            {column.getHeaderProps(
+                              column.getSortByToggleProps(),
+                            ).key != 'header_edit' ? (
+                              <span className='inline-block align-bottom'>
+                                {column.isSorted ? (
+                                  column.isSortedDesc ? (
+                                    <HiOutlineArrowSmDown className='h-5 w-5 text-red-600' />
+                                  ) : (
+                                    <HiOutlineArrowSmUp className='h-5 w-5 text-green-600' />
+                                  )
                                 ) : (
-                                  <svg
-                                    xmlns='http://www.w3.org/2000/svg'
-                                    className='h-3 w-3 ml-2 text-green-600'
-                                    fill='none'
-                                    viewBox='0 0 24 24'
-                                    stroke='currentColor'
-                                  >
-                                    <path
-                                      strokeLinecap='round'
-                                      strokeLinejoin='round'
-                                      strokeWidth={2}
-                                      d='M5 10l7-7m0 0l7 7m-7-7v18'
-                                    />
-                                  </svg>
-                                )
-                              ) : (
-                                <svg
-                                  xmlns='http://www.w3.org/2000/svg'
-                                  className='h-3 w-3 ml-2 text-gray-500'
-                                  fill='none'
-                                  viewBox='0 0 24 24'
-                                  stroke='currentColor'
-                                >
-                                  <path
-                                    stroke-linecap='round'
-                                    stroke-linejoin='round'
-                                    stroke-width='2'
-                                    d='M20 12H4'
-                                  />
-                                </svg>
-                              )}
-                            </span>
-                          ) : (
-                            ''
-                          )}
+                                  <HiMinusSm className='h-5 w-5 text-gray-600' />
+                                )}
+                              </span>
+                            ) : (
+                              ''
+                            )}
+                          </div>
                         </th>
                       ))}
                     </tr>
