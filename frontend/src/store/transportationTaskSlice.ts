@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { BACKEND_URL } from '../config/envVars';
 
 interface eventState {
   transportationTasks: any[];
@@ -12,7 +13,7 @@ const initialState: eventState = {
 export const fetchTransportationTasks = createAsyncThunk(
   'transportationTask/fetchTransportationTasks',
   async (thunkAPI) => {
-    const response = await axios.get('http://localhost:4004/public/tasks');
+    const response = await axios.get(BACKEND_URL);
     return response;
   },
 );
