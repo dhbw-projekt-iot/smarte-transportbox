@@ -104,7 +104,7 @@ const DeliveryTable = () => {
           <button
             className='text-indigo-700 hover:text-indigo-700'
             value='edit'
-            onClick={(e) => showDetails(e, cell.row.values.id)}
+            onClick={(e) => showDetails(e, cell.row.values._id)}
           >
             Details
           </button>
