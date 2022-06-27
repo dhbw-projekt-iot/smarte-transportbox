@@ -1,0 +1,14 @@
+node_modules/
+dist/
+Dockerfile
+docker-compose*
+.dockerignore
+.git
+.gitignore
+.eslintrc.js
+.eslintignore
+*.log
+graphql.schema.json
+schema.gql
+codegen.yml
+
