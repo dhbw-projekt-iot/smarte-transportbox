@@ -13,13 +13,15 @@ import {
   HiOutlineChevronDoubleRight,
   HiPlus,
 } from 'react-icons/hi';
-import { testData } from './testData';
 import { useNavigate } from 'react-router';
 import NewDelivery from './NewDelivery';
-const data: any = testData;
+import { useAppSelector } from '../../../store/hooks';
+import dayjs from 'dayjs';
 
 const DeliveryTable = () => {
-  const [Deliveries, setDeliveries] = useState([]);
+  const deliveries = useAppSelector(
+    (state) => state.transportationTasks.transportationTasks,
+  );
   const [open, setOpen] = useState(false);
   let navigate = useNavigate();
 
@@ -34,18 +36,21 @@ const DeliveryTable = () => {
     () => [
       {
         Header: 'ID',
-        accessor: 'id',
+        accessor: '_id',
         width: 'w-1/12 ',
       },
       {
         Header: 'Sendungsart',
-        accessor: 'type',
+        accessor: 'productType',
         width: 'w-1/6 ',
       },
       {
         Header: 'Erstelldatum',
-        accessor: 'creationDate',
+        accessor: 'createdAt',
         width: 'w-1/6 ',
+        Cell: (cell: any) => {
+          return dayjs(cell.row.values.createdAt).format('DD.MM.YYYY');
+        },
       },
       {
         Header: 'Status',
@@ -124,7 +129,12 @@ const DeliveryTable = () => {
     prepareRow,
     state,
     setGlobalFilter,
-  } = useTable({ columns, data }, useGlobalFilter, useSortBy, usePagination);
+  } = useTable(
+    { columns, data: deliveries },
+    useGlobalFilter,
+    useSortBy,
+    usePagination,
+  );
 
   const { globalFilter } = state;
   const { pageIndex, pageSize } = state;

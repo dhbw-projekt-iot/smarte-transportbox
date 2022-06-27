@@ -1,6 +1,14 @@
+import { useEffect } from 'react';
+import { useAppDispatch } from '../../../store/hooks';
+import { fetchTransportationTasks } from '../../../store/transportationTaskSlice';
 import DeliveryTable from './DeliveryTable';
 
 const Deliveries = () => {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(fetchTransportationTasks());
+  }, []);
+
   return (
     <>
       <main className='flex-1'>

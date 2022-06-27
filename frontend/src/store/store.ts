@@ -1,10 +1,12 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import logSlice from './logSlice';
+import transportationTasksSlice from './transportationTaskSlice';
 
 export const store = configureStore({
   reducer: {
     // list reducers here or combine them and list root reducer
     log: logSlice,
+    transportationTasks: transportationTasksSlice,
   },
 });
 
