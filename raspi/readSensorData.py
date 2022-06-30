@@ -1,8 +1,13 @@
+from ast import If
 from sqlite3 import Timestamp
 from numpy import var
 from register import register
 from currentJob import currentJob
+from pushIncident import pushIncident
 from datetime import datetime as DateTime
+from os.path import exists
+from pushMeasurements import pushMeasurements
+from pushIncident import pushIncident
 
 import glob
 import json
@@ -21,8 +26,6 @@ GPIO.setup(4, GPIO.IN, pull_up_down = GPIO.PUD_UP)
 #sleep for x seconds
 readSensorDataIntervall = 5
 
-############################################################
-############################################################
 ############################################################
 ############################################################
 ############################## Get temp
@@ -47,8 +50,6 @@ def getTemperature():
 
 ############################################################
 ############################################################
-############################################################
-############################################################
 ############################## Get humidity
 sleeptime = 1
 DHTSensor = Adafruit_DHT.DHT11
@@ -64,47 +65,74 @@ def getHumidity(DHTSensor, GPIO_Pin):
 
 ############################################################
 ############################################################
-############################################################
-############################################################
 ############################## Device ID
 
 def getDeviceID():
-    # remove after testing
-    deviceID = {"a"}
 
-    file = open("config.txt", "w")
+    with open("config.txt", "w") as configFile:
+        configFile.write(register())
 
-    str = repr(deviceID)
-    file.write(str)
+    with open("config.txt", "r") as configFile:
+        deviceID = configFile.readline()[2:-2]
 
-    file.close()
-    ######
+    return deviceID
 
-    configFile = open("config.txt", "r")
 
-    deviceIdFromConfig = configFile.readline()[2:-2]
-    configFile.close()
-
-    if len(deviceIdFromConfig) >= 1:
-        deviceID = deviceIdFromConfig
-        return deviceID
-    else:
-        deviceID = register()
-        return deviceID
-    
-
-############################################################
-############################################################
 ############################################################
 ############################################################
 ############################## Check task
 
-
 def getCurrentJob(deviceID):
-    job = {"a":54, "b":87}
-    
-    with open("currentJob.json", "w", encoding="utf-8") as JobFile:
-        json.dump(job, JobFile, ensure_ascii=False, indent=4)
+    job = {
+        "deviceID": "abc", 
+        "measurements": [], 
+        "incidents": [], 
+        "constraints": {
+            "temperature": {
+		        "criticalMaximum": 10,
+                "criticalMinimum": 1,
+                "warningThresholdHigh": 2,
+                "warningThresholdLow": 1,
+                "exceedCountUntilIncident": 5,
+                "exceedMinutesUntilIncident": 7    
+	        },
+	        "humidity": {
+		        "criticalMaximum": 10,
+                "criticalMinimum": 1,
+                "warningThresholdHigh": 2,
+                "warningThresholdLow": 1,
+                "exceedCountUntilIncident": 5,
+                "exceedMinutesUntilIncident": 7 
+	        },
+	        "tilt": {
+		        "criticalMaximum": 10,
+                "criticalMinimum": 1,
+                "warningThresholdHigh": 2,
+                "warningThresholdLow": 1,
+                "exceedCountUntilIncident": 5,
+                "exceedMinutesUntilIncident": 7 
+	        },
+	        "vibration": {
+		        "criticalMaximum": 10,
+                "criticalMinimum": 1,
+                "warningThresholdHigh": 2,
+                "warningThresholdLow": 1,
+                "exceedCountUntilIncident": 5,
+                "exceedMinutesUntilIncident": 7 
+	        },
+        },
+        "productDescription": "",
+        "productType": "",
+        "shippingID": "",
+        "fromLocation": "",
+        "toLocation": "",
+        "ownerMail": "",
+        "createdAt": "",
+        "status": ""
+    }
+
+    with open("currentJob.json", "w") as JobFile:
+        json.dump(job, JobFile, indent=4)
 
     with open("currentJob.json", "r") as readJobFile:
         job=readJobFile.read()
@@ -116,13 +144,9 @@ def getCurrentJob(deviceID):
     else:
         job = currentJob(deviceID)
         with open("currentJob.json", "w", encoding="utf-8") as JobFile:
-            json.dump(job, JobFile, ensure_ascii=False, indent=4)
-        return job
-      
+            json.dump(job, JobFile, indent=4)
+        return job   
 
-############################################################
-############################################################
-############################################################
 ############################################################
 ############################## do it!  
 
@@ -148,26 +172,76 @@ def measurementDic():
         "temperature": temperature,
         "humidity": humidity
     }
+
+    checkConstraints(measurement)
+
     return measurement
 
-def createJSONData(measurement):
-    jsonData = []
-    jsonData.append(measurement)
-    return jsonData
-
 def createJSONFile(jsonData):
-    with open("measurement.json", "a") as jsonFile:
-        for data in jsonData:
-            json.dump(data, jsonFile)
-            jsonFile.write("\n")
-            jsonData = []
-    with open("measurement.json", "rb") as jsonFile:
-        for line in json_lines.reader(jsonFile):
-            jsonData.append(line)
+    oldContent = json.loads("[]")
 
-def writeMeasurementsIntoFile():
-    print("Test") 
+    if exists("measurement.json"):
+        with open("measurement.json", "r") as jsonFile:
+            oldContent = json.load(jsonFile)
+
+    with open("measurement.json", "w") as jsonFile:
+        oldContent.append(jsonData)
+        json.dump(oldContent, jsonFile)
+
+def sendMeasurements():
+    measurements = open("measurement.json", "r").readlines()
+
+    pushMeasurements(deviceID, measurements)
+    
+    with open("measurement.json", "w") as measurementFile:
+        measurementFile.write("[]")
+
+
+def updateCurrentTask():
+    with open("currentJob.json", "w") as file:
+        file.write("abc")
+    getCurrentJob(deviceID)
+    
+def checkConstraints(measurements):
+    currentTask = currentJob
+
+    if measurements["temperature"] > currentTask["constraints"]["temperature"]["criticalMaximum"]:
+        incident = {
+            "sensor": "Temperature",
+            "value": measurements["temperature"],
+            "timestamp": measurements["timestamp"]
+        }
+        pushIncident(deviceID, incident)
+    elif measurements["humidity"] < currentTask["constraints"]["temperature"]["criticalMinimum"]:
+        incident = {
+                "sensor": "Temperature",
+                "value": measurements["temperature"],
+                "timestamp": measurements["timestamp"]
+            }
+    elif measurements["humidity"] > currentTask["constraints"]["humidity"]["criticalMaximum"]:
+        incident = {
+                    "sensor": "Humidity",
+                    "value": measurements["humidity"],
+                    "timestamp": measurements["timestamp"]
+                }
+    elif measurements["humidity"] < currentTask["constraints"]["humidity"]["criticalMinimum"]:
+        incident = {
+                    "sensor": "Humidity",
+                    "value": measurements["humidity"],
+                    "timestamp": measurements["timestamp"]
+                }
+
+counter = 0
 
 while True:
-    createJSONFile(createJSONData(measurementDic()))
+    createJSONFile(measurementDic())
+
+    if counter % 2 == 0:
+        print("15")
+        sendMeasurements()
+    if counter % 120 == 0:
+        print("120")
+        updateCurrentTask()
+
+    counter = counter + 1
     sleep(readSensorDataIntervall)

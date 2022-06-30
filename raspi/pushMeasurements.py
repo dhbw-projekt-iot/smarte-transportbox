@@ -11,6 +11,6 @@ def pushMeasurements(deviceID, measurements):
         print("No current task for the given device id")
         return
 
-    response = r.text()
+    response = r
 
     return response
