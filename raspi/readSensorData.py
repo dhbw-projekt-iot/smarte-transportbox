@@ -198,8 +198,6 @@ def sendMeasurements():
 
 
 def updateCurrentTask():
-    with open("currentJob.json", "w") as file:
-        file.write("abc")
     getCurrentJob(deviceID)
     
 def checkConstraints(measurements):
@@ -236,11 +234,9 @@ counter = 0
 while True:
     createJSONFile(measurementDic())
 
-    if counter % 2 == 0:
-        print("15")
+    if counter % 15 == 0:
         sendMeasurements()
     if counter % 120 == 0:
-        print("120")
         updateCurrentTask()
 
     counter = counter + 1
