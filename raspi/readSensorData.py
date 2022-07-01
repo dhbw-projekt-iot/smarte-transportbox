@@ -1,4 +1,3 @@
-from ast import If
 from sqlite3 import Timestamp
 from numpy import var
 from register import register
@@ -19,6 +18,8 @@ from time import sleep
 from tokenize import Double
 import RPi.GPIO as GPIO
 import sys
+
+print("Started Monitoring Service…\n")
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(4, GPIO.IN, pull_up_down = GPIO.PUD_UP)
@@ -89,16 +90,16 @@ def getCurrentJob(deviceID):
         "incidents": [], 
         "constraints": {
             "temperature": {
-		        "criticalMaximum": 10,
-                "criticalMinimum": 1,
+		        "criticalMaximum": 30,
+                "criticalMinimum": 20,
                 "warningThresholdHigh": 2,
                 "warningThresholdLow": 1,
                 "exceedCountUntilIncident": 5,
                 "exceedMinutesUntilIncident": 7    
 	        },
 	        "humidity": {
-		        "criticalMaximum": 10,
-                "criticalMinimum": 1,
+		        "criticalMaximum": 45,
+                "criticalMinimum": 25,
                 "warningThresholdHigh": 2,
                 "warningThresholdLow": 1,
                 "exceedCountUntilIncident": 5,
@@ -150,8 +151,10 @@ def getCurrentJob(deviceID):
 ############################################################
 ############################## do it!  
 
+print("Fetching deviceID and current task")
 deviceID = getDeviceID()
 currentJob = getCurrentJob(deviceID)
+print("…suceeded\n");
 
 def readSensorData():
     temperature = getTemperature()
@@ -210,33 +213,41 @@ def checkConstraints(measurements):
             "timestamp": measurements["timestamp"]
         }
         pushIncident(deviceID, incident)
-    elif measurements["humidity"] < currentTask["constraints"]["temperature"]["criticalMinimum"]:
+    elif measurements["temperature"] < currentTask["constraints"]["temperature"]["criticalMinimum"]:
         incident = {
                 "sensor": "Temperature",
                 "value": measurements["temperature"],
                 "timestamp": measurements["timestamp"]
             }
+        pushIncident(deviceID, incident)
     elif measurements["humidity"] > currentTask["constraints"]["humidity"]["criticalMaximum"]:
         incident = {
                     "sensor": "Humidity",
                     "value": measurements["humidity"],
                     "timestamp": measurements["timestamp"]
                 }
+        pushIncident(deviceID, incident)
     elif measurements["humidity"] < currentTask["constraints"]["humidity"]["criticalMinimum"]:
         incident = {
                     "sensor": "Humidity",
                     "value": measurements["humidity"],
                     "timestamp": measurements["timestamp"]
                 }
+        pushIncident(deviceID, incident)
 
 counter = 0
 
+print("Starting monitoring…");
+
 while True:
+    print("Reading sensor data…")
     createJSONFile(measurementDic())
 
     if counter % 15 == 0:
+        print("Send cached measurements")
         sendMeasurements()
     if counter % 120 == 0:
+        print("Updating current task")
         updateCurrentTask()
 
     counter = counter + 1
