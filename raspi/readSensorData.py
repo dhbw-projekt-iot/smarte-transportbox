@@ -18,11 +18,14 @@ from time import sleep
 from tokenize import Double
 import RPi.GPIO as GPIO
 import sys
+import serial
 
 print("Started Monitoring Service…\n")
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(4, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+
+ser = serial.Serial('/dev/ttyACM0', 9600, timeout=1)  # Open Serial port
 
 #sleep for x seconds
 readSensorDataIntervall = 5
@@ -77,7 +80,6 @@ def getDeviceID():
         deviceID = configFile.readline()[2:-2]
 
     return deviceID
-
 
 ############################################################
 ############################################################
@@ -149,19 +151,38 @@ def getCurrentJob(deviceID):
         return job   
 
 ############################################################
-############################## do it!  
+############################## GPS
+def readString():
+    while 1:
+        while ser.read().decode("utf-8") != '$':  # Wait for the begging of the string
+            pass  # Do nothing
+        line = ser.readline().decode("utf-8")  # Read the entire string
+        return line
+
+def transformCoordinates(coord):
+    return str(float(coord)/100.0)
+
+def getCoordinates():
+    while True:
+        line = readString()
+        if line.startswith("GPRMC"):
+            gprmc = line.split(",")[3:7]
+            latitude =  "+" + transformCoordinates(gprmc[0]) if gprmc[1] == "N" else "-" + transformCoordinates(gprmc[0])
+            longitude = "+" + transformCoordinates(gprmc[2]) if gprmc[3] == "E" else "-" + transformCoordinates(gprmc[2])
+            fullCoordinates = latitude + "," + longitude
+            return fullCoordinates
+
+############################################################
+############################## execution
 
 print("Fetching deviceID and current task")
 deviceID = getDeviceID()
 currentJob = getCurrentJob(deviceID)
-print("…suceeded\n");
+print("…suceeded\n")
 
 def readSensorData():
     temperature = getTemperature()
     humidity = getHumidity(DHTSensor, GPIO_Pin=23)
-
-    print("Temperature: ",temperature)
-    print("Humidity: ",humidity)
 
     return temperature, humidity
 
@@ -169,12 +190,16 @@ def measurementDic():
     timestamp = DateTime.isoformat(DateTime.now(pytz.timezone('Europe/Berlin')))
 
     temperature, humidity = readSensorData()
+    location = getCoordinates()
 
     measurement = {
         "timestamp": timestamp,
         "temperature": temperature,
-        "humidity": humidity
+        "humidity": humidity,
+        "location": location
     }
+
+    print("\n", measurement, "\n")
 
     checkConstraints(measurement)
 
@@ -237,7 +262,7 @@ def checkConstraints(measurements):
 
 counter = 0
 
-print("Starting monitoring…");
+print("Starting monitoring…")
 
 while True:
     print("Reading sensor data…")
