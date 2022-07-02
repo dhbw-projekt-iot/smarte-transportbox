@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import constraintsSchema from "./constraints.js";
+import measurementsSchema from "./measurement.js";
+import incidentsSchema from "./incident";
 
 const { Schema } = mongoose;
 
@@ -11,14 +13,14 @@ const schema = new mongoose.Schema({
 	},
 	measurements: [
 		{
-			type: Schema.Types.ObjectId,
-			ref: "Measurement",
+			type: measurementsSchema.schema,
+			required: true
 		},
 	],
 	incidents: [
 		{
-			type: Schema.Types.ObjectId,
-			ref: "Incident",
+			type: incidentsSchema.schema,
+			required: true
 		},
 	],
 	constraints: {
