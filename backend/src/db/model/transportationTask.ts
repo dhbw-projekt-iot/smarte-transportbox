@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import constraintsSchema from "./constraints.js";
 import measurementsSchema from "./measurement.js";
-import incidentsSchema from "./incident";
+import incidentsSchema from "./incident.js";
 
 const { Schema } = mongoose;
 
