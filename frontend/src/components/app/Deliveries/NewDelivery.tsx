@@ -15,10 +15,10 @@ interface newDeliveryProps {
 }
 
 const relevantData = [
-  { title: 'Temperatur' },
-  { title: 'Feuchtigkeit' },
-  { title: 'Erschütterung' },
-  { title: 'Neigung' },
+  { title: 'Temperatur', id: 'temperature' },
+  { title: 'Feuchtigkeit', id: 'humidity' },
+  { title: 'Erschütterung', id: 'vibration' },
+  { title: 'Neigung', id: 'tilt' },
 ];
 
 const NewDelivery = ({ open, setOpen }: newDeliveryProps) => {
@@ -133,7 +133,7 @@ const NewDelivery = ({ open, setOpen }: newDeliveryProps) => {
                           >
                             {devices.map(function (item: any, _i: any) {
                               return (
-                                <option key={item._id}>
+                                <option key={item._id} value={item._id}>
                                   {item.displayName}
                                 </option>
                               );
@@ -353,11 +353,14 @@ const NewDelivery = ({ open, setOpen }: newDeliveryProps) => {
                                                 </label>
                                                 <div className='sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'>
                                                   <input
-                                                    type='text'
-                                                    name='min'
-                                                    id='min'
+                                                    {...register(
+                                                      `constraints.${element.id}.criticalMinimum`,
+                                                      {},
+                                                    )}
+                                                    type='number'
+                                                    name={`constraints.${element.id}.criticalMinimum`}
+                                                    id={`constraints.${element.id}.criticalMinimum`}
                                                     className='max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'
-                                                    placeholder=''
                                                   />
                                                 </div>
                                               </div>
@@ -370,11 +373,14 @@ const NewDelivery = ({ open, setOpen }: newDeliveryProps) => {
                                                 </label>
                                                 <div className='sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'>
                                                   <input
-                                                    type='text'
-                                                    name='max'
-                                                    id='max'
+                                                    {...register(
+                                                      `constraints.${element.id}.criticalMaximum`,
+                                                      {},
+                                                    )}
+                                                    type='number'
+                                                    name={`constraints.${element.id}.criticalMaximum`}
+                                                    id={`constraints.${element.id}.criticalMaximum`}
                                                     className='max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'
-                                                    placeholder=''
                                                   />
                                                 </div>
                                               </div>
@@ -383,15 +389,38 @@ const NewDelivery = ({ open, setOpen }: newDeliveryProps) => {
                                                   htmlFor='id'
                                                   className='block text-sm font-medium text-gray-500 sm:mt-px sm:pt-1'
                                                 >
-                                                  Warnschwelle
+                                                  Min-Warnschwelle
                                                 </label>
                                                 <div className='sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'>
                                                   <input
-                                                    type='text'
-                                                    name='warn'
-                                                    id='warn'
+                                                    {...register(
+                                                      `constraints.${element.id}.warningThresholdLow`,
+                                                      {},
+                                                    )}
+                                                    type='number'
+                                                    name='`constraints.${element.id}.warningThresholdLow`'
+                                                    id='`constraints.${element.id}.warningThresholdLow`'
                                                     className='max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'
-                                                    placeholder=''
+                                                  />
+                                                </div>
+                                              </div>
+                                              <div>
+                                                <label
+                                                  htmlFor='id'
+                                                  className='block text-sm font-medium text-gray-500 sm:mt-px sm:pt-1'
+                                                >
+                                                  Max-Warnschwelle
+                                                </label>
+                                                <div className='sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'>
+                                                  <input
+                                                    {...register(
+                                                      `constraints.${element.id}.warningThresholdHigh`,
+                                                      {},
+                                                    )}
+                                                    type='number'
+                                                    name={`constraints.${element.id}.warningThresholdHigh`}
+                                                    id={`constraints.${element.id}.warningThresholdHigh`}
+                                                    className='max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'
                                                   />
                                                 </div>
                                               </div>
@@ -404,11 +433,34 @@ const NewDelivery = ({ open, setOpen }: newDeliveryProps) => {
                                                 </label>
                                                 <div className='sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'>
                                                   <input
-                                                    type='text'
-                                                    name='numberOfViolations'
-                                                    id='numberOfViolations'
+                                                    {...register(
+                                                      `constraints.${element.id}.exceedCountUntilIncident`,
+                                                      {},
+                                                    )}
+                                                    type='number'
+                                                    name={`constraints.${element.id}.exceedCountUntilIncident`}
+                                                    id={`constraints.${element.id}.exceedCountUntilIncident`}
                                                     className='max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'
-                                                    placeholder=''
+                                                  />
+                                                </div>
+                                              </div>
+                                              <div>
+                                                <label
+                                                  htmlFor='id'
+                                                  className='block text-sm font-medium text-gray-500 sm:mt-px sm:pt-1 truncate'
+                                                >
+                                                  Max-Dauer
+                                                </label>
+                                                <div className='sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'>
+                                                  <input
+                                                    {...register(
+                                                      `constraints.${element.id}.exceedMinutesUntilIncident`,
+                                                      {},
+                                                    )}
+                                                    type='text'
+                                                    name={`constraints.${element.id}.exceedMinutesUntilIncident`}
+                                                    id={`constraints.${element.id}.exceedMinutesUntilIncident`}
+                                                    className='max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'
                                                   />
                                                 </div>
                                               </div>
