@@ -40,20 +40,25 @@ router.get("/register", async (req, res) => {
 });
 
 router.post("/pushMeasurements", async (req, res) => {
-	const {id: deviceId, measurements} = req.body;
-	const currentTask = await determineCurrentTask(deviceId, res);
-	if (!currentTask) {
-		res.status(400).send("Measurements cannot be pushed since no task exists for the used device");
-		return;
+	try {
+		const {id: deviceId, measurements} = req.body;
+		const currentTask = await determineCurrentTask(deviceId, res);
+		if (!currentTask) {
+			res.status(400).send("Measurements cannot be pushed since no task exists for the used device");
+			return;
+		}
+		const newMeasurements = [...currentTask["measurements"], ...measurements];
+		taskModel.findByIdAndUpdate(currentTask["_id"], {
+			measurements: newMeasurements
+		},
+		{
+			new: true
+		});
+		res.status(200).send("Updated Measurements.");
 	}
-	const newMeasurements = [...currentTask["measurements"], ...measurements];
-	taskModel.findByIdAndUpdate(currentTask["_id"], {
-		measurements: newMeasurements
-	},
-	{
-		new: true
-	});
-	res.status(200).send("Updated Measurements.");
+	catch (e) {
+		res.status(500).json(e);
+	}
 });
 
 router.post("/pushIncident", async (req, res) => {
