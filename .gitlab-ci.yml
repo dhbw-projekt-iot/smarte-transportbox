@@ -9,8 +9,6 @@ stages: # List of stages for jobs, and their order of execution
   - deploy-pre-prod
   - deploy-prod
 
-cache: []
-
 variables:
   REACT_APP_BACKEND_URL: $REACT_APP_BACKEND_URL
   CONFIRMATION_MAIL_ADDRESS: $CONFIRMATION_MAIL_ADDRESS
@@ -26,6 +24,7 @@ before_script:
   - docker-compose version
 
 build-job: # This job runs in the build stage, which runs first.
+  cache: []
   stage: build
   only:
     - development
