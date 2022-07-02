@@ -11,18 +11,8 @@ const schema = new mongoose.Schema({
 		ref: "Device",
 		required: true,
 	},
-	measurements: [
-		{
-			type: measurementsSchema.schema,
-			required: true
-		},
-	],
-	incidents: [
-		{
-			type: incidentsSchema.schema,
-			required: true
-		},
-	],
+	measurements: [measurementsSchema.schema],
+	incidents: [incidentsSchema.schema],
 	constraints: {
 		type: constraintsSchema.schema,
 		required: true,
