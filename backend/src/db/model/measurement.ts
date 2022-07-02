@@ -19,11 +19,11 @@ const schema = new mongoose.Schema({
 	},
 	tilt: {
 		type: "Number",
-		required: true
+		// required: true
 	},
 	vibration: {
 		type: "Number",
-		required: true
+		// required: true
 	},
 });
 
