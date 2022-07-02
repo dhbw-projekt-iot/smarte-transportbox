@@ -2,11 +2,11 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BACKEND_URL } from '../config/envVars';
 
-interface eventState {
+interface taskState {
   transportationTasks: any[];
 }
 
-const initialState: eventState = {
+const initialState: taskState = {
   transportationTasks: [],
 };
 

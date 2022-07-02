@@ -36,19 +36,19 @@ const labels = [
   '22:00',
 ];
 
-const HumidityChart = ({ id }) => {
+const HumidityChart = ({ transportationTask }) => {
   const minThreshold = {
     type: 'line',
-    yMin: testData[id].humidityData.min,
-    yMax: testData[id].humidityData.min,
+    yMin: transportationTask.constraints.humidity.criticalMinimum,
+    yMax: transportationTask.constraints.humidity.criticalMinimum,
     borderColor: 'rgb(255, 99, 132)',
     borderWidth: 4,
   };
 
   const maxThreshold = {
     type: 'line',
-    yMin: testData[id].humidityData.max,
-    yMax: testData[id].humidityData.max,
+    yMin: transportationTask.constraints.humidity.criticalMaximum,
+    yMax: transportationTask.constraints.humidity.criticalMaximum,
     borderColor: 'rgb(255, 99, 132)',
     borderWidth: 4,
   };
@@ -70,7 +70,7 @@ const HumidityChart = ({ id }) => {
 
   let dataArray: any = [];
   testData.map((delivery) => {
-    if (delivery.id === id) {
+    if (delivery.id === transportationTask._id) {
       dataArray = delivery.humidityData.data;
     }
   });

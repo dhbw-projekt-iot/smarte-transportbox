@@ -7,35 +7,36 @@ import VibrationChart from './VibrationChart';
 import TiltChart from './TiltChart';
 import { testData } from '../testData';
 
-const Charts = ({ id }) => {
+const Charts = ({ transportationTask }) => {
   const stats = [
     {
       id: 1,
       name: 'Temperatur (letzte 24 Stunden)',
       icon: FaTemperatureHigh,
-      chart: <TemperatureChart id={id} />,
-      render: testData[1].temperatureData ? true : false,
+      chart: <TemperatureChart transportationTask={transportationTask} />,
+      render: transportationTask.constraints.temperature ? true : false,
     },
+
     {
       id: 2,
       name: 'Feuchtigkeit (letzte 24 Stunden)',
       icon: MdOutlineWaterDrop,
-      chart: <HumidityChart id={id} />,
-      render: testData[1].humidityData ? true : false,
+      chart: <HumidityChart transportationTask={transportationTask} />,
+      render: transportationTask.constraints.humidity ? true : false,
     },
     {
       id: 3,
       name: 'Erschütterung (letzte 24 Stunden)',
       icon: MdOutlineVibration,
-      chart: <VibrationChart id={id} />,
-      render: testData[1].vibrationData ? true : false,
+      chart: <VibrationChart transportationTask={transportationTask} />,
+      render: transportationTask.constraints.vibration ? true : false,
     },
     {
       id: 4,
       name: 'Neigung (letzte 24 Stunden)',
       icon: FaSlash,
-      chart: <TiltChart id={id} />,
-      render: testData[1].tiltData ? true : false,
+      chart: <TiltChart transportationTask={transportationTask} />,
+      render: transportationTask.constraints.tilt ? true : false,
     },
   ];
 

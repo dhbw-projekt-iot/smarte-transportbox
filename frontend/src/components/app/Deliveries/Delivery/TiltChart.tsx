@@ -36,19 +36,19 @@ const labels = [
   '22:00',
 ];
 
-const TiltChart = ({ id }) => {
+const TiltChart = ({ transportationTask }) => {
   const minThreshold = {
     type: 'line',
-    yMin: testData[id].tiltData.min,
-    yMax: testData[id].tiltData.min,
+    yMin: transportationTask.constraints.tilt.criticalMinimum,
+    yMax: transportationTask.constraints.tilt.criticalMinimum,
     borderColor: 'rgb(255, 99, 132)',
     borderWidth: 4,
   };
 
   const maxThreshold = {
     type: 'line',
-    yMin: testData[id].tiltData.max,
-    yMax: testData[id].tiltData.max,
+    yMin: transportationTask.constraints.tilt.criticalMaximum,
+    yMax: transportationTask.constraints.tilt.criticalMaximum,
     borderColor: 'rgb(255, 99, 132)',
     borderWidth: 4,
   };
@@ -70,7 +70,7 @@ const TiltChart = ({ id }) => {
 
   let dataArray: any = [];
   testData.map((delivery) => {
-    if (delivery.id === id) {
+    if (delivery.id === transportationTask._id) {
       dataArray = delivery.tiltData.data;
     }
   });
