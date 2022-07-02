@@ -39,7 +39,7 @@ router.get("/register", async (req, res) => {
 	res.status(201).json(newDevice);
 });
 
-router.get("/pushMeasurements", async (req, res) => {
+router.post("/pushMeasurements", async (req, res) => {
 	const {id: deviceId, measurements} = req.body;
 	const currentTask = await determineCurrentTask(deviceId, res);
 	if (!currentTask) {
@@ -69,7 +69,7 @@ router.get("/pushMeasurements", async (req, res) => {
 	res.status(200).send("Updated Measurements.");
 });
 
-router.get("/pushIncident", async (req, res) => {
+router.post("/pushIncident", async (req, res) => {
 	const {id: deviceId, incident} = req.body;
 	const currentTask = await determineCurrentTask(deviceId, res);
 	if (!currentTask) {
