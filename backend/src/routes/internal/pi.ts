@@ -22,8 +22,8 @@ async function determineCurrentTask(id: ObjectId, res: Response) {
 	return tasks.at(-1);
 }
 
-router.get("/currentJob", async (req, res) => {
-	const {id: deviceID} = req.body;
+router.get("/currentJob/:id", async (req, res) => {
+	const {id: deviceID} = req.params as any;
 	const task = await determineCurrentTask(deviceID, res);
 	if (!task) {
 		res.status(404).send("No current task");
