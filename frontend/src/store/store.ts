@@ -10,6 +10,10 @@ export const store = configureStore({
     transportationTasks: transportationTasksSlice,
     devices: devicesSlice,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export type AppDispatch = typeof store.dispatch;

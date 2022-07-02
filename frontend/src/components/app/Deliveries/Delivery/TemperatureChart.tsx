@@ -38,19 +38,20 @@ const labels = [
   '20:00',
   '22:00',
 ];
-const TemperatureChart = ({ id }) => {
+const TemperatureChart = ({ transportationTask }) => {
+  console.log(transportationTask);
   const minThreshold = {
     type: 'line',
-    yMin: testData[id].temperatureData.min,
-    yMax: testData[id].temperatureData.min,
+    yMin: transportationTask.constraints.temperature.criticalMinimum,
+    yMax: transportationTask.constraints.temperature.criticalMinimum,
     borderColor: 'rgb(255, 99, 132)',
     borderWidth: 4,
   };
 
   const maxThreshold = {
     type: 'line',
-    yMin: testData[id].temperatureData.max,
-    yMax: testData[id].temperatureData.max,
+    yMin: transportationTask.constraints.temperature.criticalMaximum,
+    yMax: transportationTask.constraints.temperature.criticalMaximum,
     borderColor: 'rgb(255, 99, 132)',
     borderWidth: 4,
   };
@@ -72,7 +73,7 @@ const TemperatureChart = ({ id }) => {
 
   let dataArray: any = [];
   testData.map((delivery) => {
-    if (delivery.id === id) {
+    if (delivery.id === transportationTask._id) {
       dataArray = delivery.temperatureData.data;
     }
   });

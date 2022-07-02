@@ -10,10 +10,12 @@ import LayoutWithNavbar from './components/app/Navigation/LayoutWithNav';
 import Landing from './components/LandingPage/Landing';
 import { fetchDevices } from './store/deviceSlice';
 import { store } from './store/store';
+import { fetchTransportationTasks } from './store/transportationTaskSlice';
 
 function App() {
   useEffect(() => {
     store.dispatch(fetchDevices());
+    store.dispatch(fetchTransportationTasks());
   }, []);
   return (
     <Provider store={store}>

@@ -45,19 +45,19 @@ const labels = [
   '22:00',
 ];
 
-const VibrationChart = ({ id }) => {
+const VibrationChart = ({ transportationTask }) => {
   const minThreshold = {
     type: 'line',
-    yMin: testData[id].vibrationData.min,
-    yMax: testData[id].vibrationData.min,
+    yMin: transportationTask.constraints.vibration.criticalMinimum,
+    yMax: transportationTask.constraints.vibration.criticalMinimum,
     borderColor: 'rgb(255, 99, 132)',
     borderWidth: 4,
   };
 
   const maxThreshold = {
     type: 'line',
-    yMin: testData[id].vibrationData.max,
-    yMax: testData[id].vibrationData.max,
+    yMin: transportationTask.constraints.vibration.criticalMaximum,
+    yMax: transportationTask.constraints.vibration.criticalMaximum,
     borderColor: 'rgb(255, 99, 132)',
     borderWidth: 4,
   };
@@ -79,7 +79,7 @@ const VibrationChart = ({ id }) => {
 
   let dataArray: any = [];
   testData.map((delivery) => {
-    if (delivery.id === id) {
+    if (delivery.id === transportationTask._id) {
       dataArray = delivery.vibrationData.data;
     }
   });
