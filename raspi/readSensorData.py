@@ -73,11 +73,13 @@ def getHumidity(DHTSensor, GPIO_Pin):
 
 def getDeviceID():
 
-    with open("config.txt", "w") as configFile:
-        configFile.write(register())
-
-    with open("config.txt", "r") as configFile:
-        deviceID = configFile.readline()[2:-2]
+    if exists("config.txt"):
+        with open("config.txt", "r") as configFile:
+            deviceID = configFile.readline()
+    else:
+        with open("config.txt", "w") as configFile:
+            deviceID = register()
+            configFile.write(deviceID)
 
     return deviceID
 
