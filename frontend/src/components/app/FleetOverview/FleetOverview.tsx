@@ -1,4 +1,8 @@
+import { useAppSelector } from '../../../store/hooks';
+import SingleDevice from './SingleDevice';
+
 const FleetOverview = () => {
+  const devices = useAppSelector((store) => store.devices.devices);
   return (
     <>
       <main className='flex-1'>
@@ -9,11 +13,11 @@ const FleetOverview = () => {
             </h1>
           </div>
           <div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8'>
-            {/* Replace with your content */}
-            <div className='py-4'>
-              <div className='border-4 border-dashed border-gray-200 rounded-lg h-96' />
+            <div className='mt-8 mb-8 grid xl:grid-cols-2 2xl:grid-cols-3 gap-6'>
+              {devices.map(function (item: any, _i: any) {
+                return <SingleDevice {...item} key={_i} />;
+              })}
             </div>
-            {/* /End replace */}
           </div>
         </div>
       </main>

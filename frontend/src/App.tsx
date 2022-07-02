@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
@@ -7,9 +8,13 @@ import Delivery from './components/app/Deliveries/Delivery/Delivery';
 import FleetOverview from './components/app/FleetOverview/FleetOverview';
 import LayoutWithNavbar from './components/app/Navigation/LayoutWithNav';
 import Landing from './components/LandingPage/Landing';
+import { fetchDevices } from './store/deviceSlice';
 import { store } from './store/store';
 
 function App() {
+  useEffect(() => {
+    store.dispatch(fetchDevices());
+  }, []);
   return (
     <Provider store={store}>
       <BrowserRouter>
