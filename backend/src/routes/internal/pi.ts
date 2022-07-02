@@ -23,20 +23,30 @@ async function determineCurrentTask(id: ObjectId, res: Response) {
 }
 
 router.get("/currentJob/:id", async (req, res) => {
-	const {id: deviceID} = req.params as any;
-	const task = await determineCurrentTask(deviceID, res);
-	if (!task) {
-		res.status(404).send("No current task");
-		return;
+	try {
+		const {id: deviceID} = req.params as any;
+		const task = await determineCurrentTask(deviceID, res);
+		if (!task) {
+			res.status(404).send("No current task");
+			return;
+		}
+		res.status(200).json(task);
 	}
-	res.status(200).json(task);
+	catch (e) {
+		res.status(500).json(e);
+	}
 });
 
 router.get("/register", async (req, res) => {
-	const newDevice = await deviceModel.create({
-		displayName: "New device"
-	});
-	res.status(201).json(newDevice);
+	try {
+		const newDevice = await deviceModel.create({
+			displayName: "New device"
+		});
+		res.status(201).json(newDevice);
+	}
+	catch (e) {
+		res.status(500).json(e);
+	}
 });
 
 router.post("/pushMeasurements", async (req, res) => {
@@ -62,24 +72,29 @@ router.post("/pushMeasurements", async (req, res) => {
 });
 
 router.post("/pushIncident", async (req, res) => {
-	const {id: deviceId, incident} = req.body;
-	const currentTask = await determineCurrentTask(deviceId, res);
-	if (!currentTask) {
-		res.status(400).send("Incident cannot be pushed since no task exists for the used device");
-		return;
+	try {
+		const {id: deviceId, incident} = req.body;
+		const currentTask = await determineCurrentTask(deviceId, res);
+		if (!currentTask) {
+			res.status(400).send("Incident cannot be pushed since no task exists for the used device");
+			return;
+		}
+		const newIncidents = [...currentTask["incidents"], incident];
+	
+		taskModel.findByIdAndUpdate(currentTask["_id"], {
+			incidents: newIncidents
+		},
+		{
+			new: true
+		});
+	
+		handleIncident(currentTask.ownerMail, currentTask, incident);
+	
+		res.status(200).send("Updated Incidents.");
 	}
-	const newIncidents = [...currentTask["incidents"], incident];
-
-	taskModel.findByIdAndUpdate(currentTask["_id"], {
-		incidents: newIncidents
-	},
-	{
-		new: true
-	});
-
-	handleIncident(currentTask.ownerMail, currentTask, incident);
-
-	res.status(200).send("Updated Incidents.");
+	catch (e) {
+		res.status(500).json(e);
+	}
 });
 
 export default router;
