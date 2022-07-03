@@ -33,7 +33,7 @@ router.get("/currentJob/:id", async (req, res) => {
 		res.status(200).json(task);
 	}
 	catch (e) {
-		res.status(500).json(e);
+		res.status(456).json(e);
 	}
 });
 
@@ -45,7 +45,7 @@ router.get("/register", async (req, res) => {
 		res.status(201).json(newDevice);
 	}
 	catch (e) {
-		res.status(500).json(e);
+		res.status(456).json(e);
 	}
 });
 
@@ -65,15 +65,15 @@ router.post("/pushMeasurements", async (req, res) => {
 			new: true
 		},
 		(err, doc, ress) => res.status(200).json({err, doc, res: ress}));
-		res.status(200).json({
-			deviceId,
-			measurementsInput: measurements,
-			currentTask,
-			newMeasurements
-		});
+		// res.status(200).json({
+		// 	deviceId,
+		// 	measurementsInput: measurements,
+		// 	currentTask,
+		// 	newMeasurements
+		// });
 	}
 	catch (e) {
-		res.status(500).json(e);
+		res.status(456).json(e);
 	}
 });
 
@@ -97,15 +97,15 @@ router.post("/pushIncident", async (req, res) => {
 	
 		handleIncident(currentTask.ownerMail, currentTask, incident);
 	
-		res.status(200).json({
-			deviceId,
-			incidentInput: incident,
-			currentTask,
-			newIncidents
-		});
+		// res.status(200).json({
+		// 	deviceId,
+		// 	incidentInput: incident,
+		// 	currentTask,
+		// 	newIncidents
+		// });
 	}
 	catch (e) {
-		res.status(500).json(e);
+		res.status(456).json(e);
 	}
 });
 
