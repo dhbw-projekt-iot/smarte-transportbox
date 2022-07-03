@@ -65,7 +65,6 @@ router.post("/pushMeasurements", async (req, res) => {
 			new: true
 		},
 		(err, doc, ress) => res.status(200).json({err, doc, res: ress}));
-		// res.status(200).send("Updated Measurements.");
 		res.status(200).json({
 			deviceId,
 			measurementsInput: measurements,
@@ -93,11 +92,17 @@ router.post("/pushIncident", async (req, res) => {
 		},
 		{
 			new: true
-		});
+		},
+		(err, doc, ress) => res.status(200).json({err, doc, res: ress}));
 	
 		handleIncident(currentTask.ownerMail, currentTask, incident);
 	
-		res.status(200).send("Updated Incidents.");
+		res.status(200).json({
+			deviceId,
+			incidentInput: incident,
+			currentTask,
+			newIncidents
+		});
 	}
 	catch (e) {
 		res.status(500).json(e);
