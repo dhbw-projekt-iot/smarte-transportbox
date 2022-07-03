@@ -9,6 +9,7 @@ import {
 } from './Delivery/defaultConstraints';
 import axios from 'axios';
 import { BACKEND_URL } from '../../../config/envVars';
+import { fetchTransportationTasks } from '../../../store/transportationTaskSlice';
 
 export type NewDeliveryFormInputs = {
   productType: string;
@@ -72,12 +73,12 @@ const NewDeliveryForm = (
       } else if (dataRequest.productType === 'Zerbrechlich') {
         dataRequest.constraints = fragileFreightConstraints;
       }
-      console.log(dataRequest);
       const response = await axios.post(
         BACKEND_URL + '/public/tasks',
         dataRequest,
       );
       setOpen(false);
+      dispatch(fetchTransportationTasks());
     } catch (error: any) {
       console.log(error);
     }
