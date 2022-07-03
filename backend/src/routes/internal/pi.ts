@@ -63,7 +63,8 @@ router.post("/pushMeasurements", async (req, res) => {
 		},
 		{
 			new: true
-		});
+		},
+		(err, doc, ress) => res.status(200).json({err, doc, res: ress}));
 		// res.status(200).send("Updated Measurements.");
 		res.status(200).json({
 			deviceId,
