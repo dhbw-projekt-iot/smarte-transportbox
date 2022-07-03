@@ -8,8 +8,8 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import dayjs from 'dayjs';
 import { Line } from 'react-chartjs-2';
-import { testData } from '../testData';
 
 ChartJS.register(
   CategoryScale,
@@ -20,21 +20,6 @@ ChartJS.register(
   Tooltip,
   Legend,
 );
-
-const labels = [
-  '00:00',
-  '02:00',
-  '04:00',
-  '06:00',
-  '08:00',
-  '10:00',
-  '12:00',
-  '14:00',
-  '16:00',
-  '18:00',
-  '20:00',
-  '22:00',
-];
 
 const TiltChart = ({ transportationTask }) => {
   const minThreshold = {
@@ -55,6 +40,16 @@ const TiltChart = ({ transportationTask }) => {
 
   const options: any = {
     responsive: true,
+    scales: {
+      y: {
+        beginAtZero: false,
+      },
+      x: {
+        ticks: {
+          maxTicksLimit: 24,
+        },
+      },
+    },
     plugins: {
       legend: {
         position: 'bottom' as const,
@@ -69,17 +64,19 @@ const TiltChart = ({ transportationTask }) => {
   };
 
   let dataArray: any = [];
-  testData.map((delivery) => {
-    if (delivery.id === transportationTask._id) {
-      dataArray = delivery.tiltData.data;
-    }
-  });
+  let labels: any = [];
+  if (transportationTask.measurements) {
+    transportationTask.measurements.map((dataPoint) => {
+      dataArray.push(dataPoint.tilt);
+      labels.push(dayjs(dataPoint.timestamp).format('HH:mm'));
+    });
+  }
 
   const data = {
     labels,
     datasets: [
       {
-        label: 'Neigungsvorfälle',
+        label: 'Neigungsverlauf in Grad.',
         data: dataArray,
         borderColor: '#6366f1',
         backgroundColor: '#6366f1',

@@ -4,48 +4,59 @@ import { FaTemperatureHigh, FaSlash } from 'react-icons/fa';
 import { MdOutlineWaterDrop } from 'react-icons/md';
 import { MdOutlineVibration } from 'react-icons/md';
 import { classNames } from '../../../../utils/classNames';
-import { testData } from '../testData';
 
-const stats = [
-  {
-    id: 1,
-    name: 'Temperatur',
-    stat: '2',
-    icon: FaTemperatureHigh,
-    change: '50%',
-    changeType: 'increase',
-    render: testData[1].temperatureData ? true : false,
-  },
-  {
-    id: 2,
-    name: 'Feuchtigkeit',
-    stat: '0',
-    icon: MdOutlineWaterDrop,
-    change: '0%',
-    changeType: 'decrease',
-    render: testData[1].humidityData ? true : false,
-  },
-  {
-    id: 3,
-    name: 'Erschütterung',
-    stat: '3',
-    icon: MdOutlineVibration,
-    change: '3.2%',
-    changeType: 'decrease',
-    render: testData[1].vibrationData ? true : false,
-  },
-  {
-    id: 4,
-    name: 'Neigung',
-    stat: '0',
-    icon: FaSlash,
-    change: '0',
-    changeType: '',
-    render: testData[1].tiltData ? true : false,
-  },
-];
+const Incidents = ({ transportationTask }) => {
+  let incidents = {
+    Temperature: [] as any,
+    Humidity: [] as any,
+    Vibration: [] as any,
+    Tilt: [] as any,
+  };
+  if (transportationTask.incidents) {
+    transportationTask.incidents.map((dataPoint) => {
+      incidents[dataPoint.sensor].push(dataPoint);
+    });
+  }
 
-const Incidents = () => {
+  const stats = [
+    {
+      id: 1,
+      name: 'Temperatur',
+      stat: incidents.Temperature.length,
+      icon: FaTemperatureHigh,
+      change: incidents.Temperature.length / 1,
+      changeType: incidents.Temperature.length > 0 ? 'increase' : 'decrease',
+      render: transportationTask.constraints.temperature ? true : false,
+    },
+    {
+      id: 2,
+      name: 'Feuchtigkeit',
+      stat: incidents.Humidity.length,
+      icon: MdOutlineWaterDrop,
+      change: incidents.Humidity.length / 1,
+      changeType: incidents.Humidity.length > 0 ? 'increase' : 'decrease',
+      render: transportationTask.constraints.humidity ? true : false,
+    },
+    {
+      id: 3,
+      name: 'Erschütterung',
+      stat: incidents.Vibration.length,
+      icon: MdOutlineVibration,
+      change: incidents.Vibration.length / 1,
+      changeType: incidents.Vibration.length > 0 ? 'increase' : 'decrease',
+      render: transportationTask.constraints.vibration ? true : false,
+    },
+    {
+      id: 4,
+      name: 'Neigung',
+      stat: incidents.Tilt.length,
+      icon: FaSlash,
+      change: incidents.Tilt.length / 1,
+      changeType: incidents.Tilt.length > 0 ? 'increase' : 'decrease',
+      render: transportationTask.constraints.tilt ? true : false,
+    },
+  ];
+
   return (
     <div>
       <h3 className='text-lg leading-6 font-medium text-gray-900'>

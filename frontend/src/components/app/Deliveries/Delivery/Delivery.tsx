@@ -39,7 +39,7 @@ const Delivery = () => {
           <div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-8'>
             {transportationTask && (
               <>
-                <Incidents />
+                <Incidents transportationTask={transportationTask} />
                 <Charts transportationTask={transportationTask} />
                 <GMap />
               </>

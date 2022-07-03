@@ -77,6 +77,7 @@ const NewDeliveryForm = (
         BACKEND_URL + '/public/tasks',
         dataRequest,
       );
+      setOpen(false);
     } catch (error: any) {
       console.log(error);
     }
