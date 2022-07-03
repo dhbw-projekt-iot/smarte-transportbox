@@ -4,6 +4,7 @@ import { useAppSelector } from '../../../../store/hooks';
 import { testData } from '../testData';
 import Charts from './Charts';
 import Incidents from './Incidents';
+import IncidentsTable from './IncidentsTable';
 import GMap from './Map';
 
 const Delivery = () => {
@@ -24,6 +25,8 @@ const Delivery = () => {
     }
   }, [transportationTasks]);
 
+  const [incidentTableOpen, setIncidentTableOpen] = useState(false);
+
   return (
     <>
       <main className='flex-1'>
@@ -39,7 +42,17 @@ const Delivery = () => {
           <div className='max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-8'>
             {transportationTask && (
               <>
-                <Incidents transportationTask={transportationTask} />
+                {incidentTableOpen ? (
+                  <IncidentsTable
+                    transportationTask={transportationTask}
+                    setIncidentTableOpen={setIncidentTableOpen}
+                  />
+                ) : (
+                  <Incidents
+                    transportationTask={transportationTask}
+                    setIncidentTableOpen={setIncidentTableOpen}
+                  />
+                )}
                 <Charts transportationTask={transportationTask} />
                 <GMap />
               </>

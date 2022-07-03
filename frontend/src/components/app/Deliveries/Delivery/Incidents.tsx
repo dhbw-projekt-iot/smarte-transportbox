@@ -5,7 +5,7 @@ import { MdOutlineWaterDrop } from 'react-icons/md';
 import { MdOutlineVibration } from 'react-icons/md';
 import { classNames } from '../../../../utils/classNames';
 
-const Incidents = ({ transportationTask }) => {
+const Incidents = ({ transportationTask, setIncidentTableOpen }) => {
   let incidents = {
     Temperature: [] as any,
     Humidity: [] as any,
@@ -116,14 +116,13 @@ const Incidents = ({ transportationTask }) => {
                   </p>
                   <div className='absolute bottom-0 inset-x-0 bg-gray-50 px-4 py-4 sm:px-6'>
                     <div className='text-sm'>
-                      <a
-                        href='#'
+                      <button
                         className='font-medium text-indigo-600 hover:text-indigo-500'
+                        onClick={() => setIncidentTableOpen(true)}
                       >
-                        {' '}
                         Alle Incidents einsehen
                         <span className='sr-only'> {item.name} stats</span>
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </dd>
