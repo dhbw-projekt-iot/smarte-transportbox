@@ -5,7 +5,7 @@ import {
 } from 'react-icons/hi';
 
 export const navItems = [
-  { name: 'Dashboard', route: '/app/dashboard', icon: HiHome },
+  /*{ name: 'Dashboard', route: '/app/dashboard', icon: HiHome },*/
   {
     name: 'Sendungen',
     route: '/app/deliveries',

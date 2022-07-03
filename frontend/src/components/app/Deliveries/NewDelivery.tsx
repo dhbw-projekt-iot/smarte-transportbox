@@ -92,7 +92,7 @@ const NewDelivery = ({ open, setOpen }: newDeliveryProps) => {
                       </div>
                       <div className=' sm:border-t sm:border-gray-200 sm:pt-1'>
                         <label
-                          htmlFor='departure'
+                          htmlFor='fromLocation'
                           className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-1'
                         >
                           Produktart
@@ -119,7 +119,7 @@ const NewDelivery = ({ open, setOpen }: newDeliveryProps) => {
                       </div>
                       <div className=' sm:border-t sm:border-gray-200 sm:pt-1'>
                         <label
-                          htmlFor='departure'
+                          htmlFor='fromLocation'
                           className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-1'
                         >
                           Überwachungsmodul
@@ -146,19 +146,19 @@ const NewDelivery = ({ open, setOpen }: newDeliveryProps) => {
                       </div>
                       <div className=' sm:border-t sm:border-gray-200 sm:pt-1'>
                         <label
-                          htmlFor='departure'
+                          htmlFor='fromLocation'
                           className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-1'
                         >
                           Beschreibung der Sendung
                         </label>
                         <div className='mt-2 mb-2 sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'>
                           <textarea
-                            {...register('description', {})}
-                            id='description'
-                            name='description'
+                            {...register('productDescription', {})}
+                            id='productDescription'
+                            name='productDescription'
                             rows={3}
                             className={classNames(
-                              !errors.description
+                              !errors.productDescription
                                 ? 'border-gray-300'
                                 : 'border-red-500',
                               'block w-full shadow-sm sm:text-sm focus:ring-indigo-400 focus:border-indigo-400 rounded-md',
@@ -166,25 +166,25 @@ const NewDelivery = ({ open, setOpen }: newDeliveryProps) => {
                             placeholder='Beschreibung der Sendung einfügen.'
                           />
                           <div className='text-red-500'>
-                            {errors.description?.message}
+                            {errors.productDescription?.message}
                           </div>
                         </div>
                       </div>
                       <div className=' sm:border-t sm:border-gray-200 sm:pt-1'>
                         <label
-                          htmlFor='departure'
+                          htmlFor='fromLocation'
                           className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-1'
                         >
                           Ausgangsort
                         </label>
                         <div className='mt-2 mb-2 sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'>
                           <input
-                            {...register('departure', {})}
+                            {...register('fromLocation', {})}
                             type='text'
-                            name='departure'
-                            id='departure'
+                            name='fromLocation'
+                            id='fromLocation'
                             className={classNames(
-                              !errors.departure
+                              !errors.fromLocation
                                 ? 'border-gray-300'
                                 : 'border-red-500',
                               'block w-full shadow-sm sm:text-sm focus:ring-indigo-400 focus:border-indigo-400 rounded-md',
@@ -192,25 +192,25 @@ const NewDelivery = ({ open, setOpen }: newDeliveryProps) => {
                             placeholder='Fliederstraße 32, 75839 Buxtehude, DE'
                           />
                           <div className='text-red-500'>
-                            {errors.departure?.message}
+                            {errors.fromLocation?.message}
                           </div>
                         </div>
                       </div>
                       <div className=' sm:border-t sm:border-gray-200 sm:pt-1'>
                         <label
-                          htmlFor='destination'
+                          htmlFor='toLocation'
                           className='block text-sm font-medium text-gray-700 sm:mt-px sm:pt-1'
                         >
                           Zielort
                         </label>
                         <div className='mt-2 mb-2 sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'>
                           <input
-                            {...register('destination', {})}
+                            {...register('toLocation', {})}
                             type='text'
-                            name='destination'
-                            id='destination'
+                            name='toLocation'
+                            id='toLocation'
                             className={classNames(
-                              !errors.destination
+                              !errors.toLocation
                                 ? 'border-gray-300'
                                 : 'border-red-500',
                               'block w-full shadow-sm sm:text-sm focus:ring-indigo-400 focus:border-indigo-400 rounded-md',
@@ -218,7 +218,7 @@ const NewDelivery = ({ open, setOpen }: newDeliveryProps) => {
                             placeholder='Fliederstraße 99, 75839 Buxtehude, DE'
                           />
                           <div className='text-red-500'>
-                            {errors.destination?.message}
+                            {errors.toLocation?.message}
                           </div>
                         </div>
                       </div>
@@ -232,12 +232,12 @@ const NewDelivery = ({ open, setOpen }: newDeliveryProps) => {
                       </label>
                       <div className='mt-2 mb-2 sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'>
                         <input
-                          {...register('deliveryId', {})}
+                          {...register('shippingId', {})}
                           type='text'
-                          name='deliveryId'
-                          id='deliveryId'
+                          name='shippingId'
+                          id='shippingId'
                           className={classNames(
-                            !errors.deliveryId
+                            !errors.shippingId
                               ? 'border-gray-300'
                               : 'border-red-500',
                             'block w-full shadow-sm sm:text-sm focus:ring-indigo-400 focus:border-indigo-400 rounded-md',
@@ -245,7 +245,7 @@ const NewDelivery = ({ open, setOpen }: newDeliveryProps) => {
                           placeholder='23908489040404'
                         />
                         <div className='text-red-500'>
-                          {errors.deliveryId?.message}
+                          {errors.shippingId?.message}
                         </div>
                       </div>
                     </div>
@@ -258,12 +258,12 @@ const NewDelivery = ({ open, setOpen }: newDeliveryProps) => {
                       </label>
                       <div className='mt-2 mb-2 sm:col-span-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md'>
                         <input
-                          {...register('email', {})}
+                          {...register('ownerMail', {})}
                           type='text'
-                          name='email'
-                          id='email'
+                          name='ownerMail'
+                          id='ownerMail'
                           className={classNames(
-                            !errors.email
+                            !errors.ownerMail
                               ? 'border-gray-300'
                               : 'border-red-500',
                             'block w-full shadow-sm sm:text-sm focus:ring-indigo-400 focus:border-indigo-400 rounded-md',
@@ -271,7 +271,7 @@ const NewDelivery = ({ open, setOpen }: newDeliveryProps) => {
                           placeholder='luisschmitt01@gmail.com'
                         />
                         <div className='text-red-500'>
-                          {errors.email?.message}
+                          {errors.ownerMail?.message}
                         </div>
                       </div>
                     </div>
@@ -288,12 +288,12 @@ const NewDelivery = ({ open, setOpen }: newDeliveryProps) => {
                         </div>
                         <div className='space-y-6 sm:space-y-5 divide-y divide-gray-200'>
                           <div className='pt-6 sm:pt-2'>
-                            <div role='group' aria-labelledby='label-email'>
+                            <div role='group' aria-labelledby='label-ownerMail'>
                               <div className='sm:grid sm:grid-cols-3 sm:gap-4 sm:items-baseline'>
                                 <div>
                                   <div
                                     className='text-base font-medium text-gray-900 sm:text-sm sm:text-gray-700'
-                                    id='label-email'
+                                    id='label-ownerMail'
                                   >
                                     Relevante Parameter
                                   </div>

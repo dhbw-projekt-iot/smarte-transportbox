@@ -5,6 +5,8 @@ import markerIconPng from 'leaflet/dist/images/marker-icon.png';
 import { Icon } from 'leaflet';
 import RoutingMachine from './RoutingMachine';
 import L from 'leaflet';
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 const svgIcon = L.divIcon({
   html: `
@@ -20,17 +22,22 @@ const svgIcon = L.divIcon({
 </svg>`,
   className: '',
   iconSize: [24, 40],
-  iconAnchor: [12, 40],
+  iconAnchor: [14, 42],
 });
 
-var greenIcon = new Icon({
-  iconUrl: 'https://freesvg.org/img/map-pin.png',
-  shadowUrl: 'http://leafletjs.com/examples/custom-icons/leaf-shadow.png',
+let positionIcon = L.icon({
+  iconUrl: icon,
+  iconAnchor: [12, 42], // point of the icon which will correspond to marker's location
 });
-
 const GMap = () => {
   const position: any = [49.01435, 8.38812];
+  const stops: any[] = [
+    [49.0272, 8.38526],
+    [48.998803, 8.34903],
+    [48.99839, 8.33542],
+  ];
 
+  const Route = RoutingMachine({ waypoints: stops });
   return (
     <>
       <div className='py-4 h-screen w-full'>
@@ -42,8 +49,11 @@ const GMap = () => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
           />
-          <RoutingMachine />
+          <Route />
           <Marker position={position} icon={svgIcon} />
+          {stops.map((stop) => (
+            <Marker position={stop} icon={positionIcon} />
+          ))}
         </MapContainer>
       </div>
     </>
