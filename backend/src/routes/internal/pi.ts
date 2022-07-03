@@ -64,7 +64,13 @@ router.post("/pushMeasurements", async (req, res) => {
 		{
 			new: true
 		});
-		res.status(200).send("Updated Measurements.");
+		// res.status(200).send("Updated Measurements.");
+		res.status(200).json({
+			deviceId,
+			measurementsInput: measurements,
+			currentTask,
+			newMeasurements
+		});
 	}
 	catch (e) {
 		res.status(500).json(e);
