@@ -7,17 +7,11 @@ import {
 import { useMemo, useState } from 'react';
 import TableFilter from '../TableFilter';
 import {
-  HiOutlineChevronRight,
-  HiOutlineChevronLeft,
-  HiOutlineChevronDoubleLeft,
-  HiOutlineChevronDoubleRight,
-  HiPlus,
   HiMinusSm,
   HiOutlineArrowSmDown,
   HiOutlineArrowSmUp,
 } from 'react-icons/hi';
 import { useNavigate } from 'react-router';
-import { useAppSelector } from '../../../../store/hooks';
 import dayjs from 'dayjs';
 import TableNav from '../TableNav';
 

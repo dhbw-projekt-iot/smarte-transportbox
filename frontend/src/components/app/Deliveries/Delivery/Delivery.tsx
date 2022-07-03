@@ -54,7 +54,7 @@ const Delivery = () => {
                   />
                 )}
                 <Charts transportationTask={transportationTask} />
-                <GMap />
+                <GMap transportationTask={transportationTask} />
               </>
             )}
           </div>

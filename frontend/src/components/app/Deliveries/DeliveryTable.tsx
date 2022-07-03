@@ -7,10 +7,6 @@ import {
 import { useMemo, useState } from 'react';
 import TableFilter from './TableFilter';
 import {
-  HiOutlineChevronRight,
-  HiOutlineChevronLeft,
-  HiOutlineChevronDoubleLeft,
-  HiOutlineChevronDoubleRight,
   HiPlus,
   HiMinusSm,
   HiOutlineArrowSmDown,
