@@ -2,16 +2,39 @@ import { FaTemperatureHigh, FaSlash } from 'react-icons/fa';
 import { MdOutlineWaterDrop } from 'react-icons/md';
 import { MdOutlineVibration } from 'react-icons/md';
 import TemperatureChart from './TemperatureChart';
-import HumidityChart from './HumidityChart';
 import VibrationChart from './VibrationChart';
 import TiltChart from './TiltChart';
-import { testData } from '../testData';
+import HumidityChart from './HumidityChart';
+import dayjs from 'dayjs';
 
 const Charts = ({ transportationTask }) => {
+  let fromDate;
+  let toDate;
+  if (
+    transportationTask.measurements &&
+    transportationTask.measurements.length > 0
+  ) {
+    fromDate = dayjs(transportationTask.measurements[0].timestamp).format(
+      'DD.MM.YYYY',
+    );
+    toDate = dayjs(
+      transportationTask.measurements[
+        transportationTask.measurements.length - 1
+      ].timestamp,
+    ).format('DD.MM.YYYY');
+  }
+
+  let timeString;
+  if (fromDate === undefined || toDate === undefined) {
+    timeString = '(Keine Daten)';
+  } else {
+    timeString = '(' + fromDate + ' bis ' + toDate + ')';
+  }
+
   const stats = [
     {
       id: 1,
-      name: 'Temperatur (letzte 24 Stunden)',
+      name: 'Temperatur ' + timeString,
       icon: FaTemperatureHigh,
       chart: <TemperatureChart transportationTask={transportationTask} />,
       render: transportationTask.constraints.temperature ? true : false,
@@ -19,21 +42,21 @@ const Charts = ({ transportationTask }) => {
 
     {
       id: 2,
-      name: 'Feuchtigkeit (letzte 24 Stunden)',
+      name: 'Feuchtigkeit ' + timeString,
       icon: MdOutlineWaterDrop,
       chart: <HumidityChart transportationTask={transportationTask} />,
       render: transportationTask.constraints.humidity ? true : false,
     },
     {
       id: 3,
-      name: 'Erschütterung (letzte 24 Stunden)',
+      name: 'Erschütterung ' + timeString,
       icon: MdOutlineVibration,
       chart: <VibrationChart transportationTask={transportationTask} />,
       render: transportationTask.constraints.vibration ? true : false,
     },
     {
       id: 4,
-      name: 'Neigung (letzte 24 Stunden)',
+      name: 'Neigung ' + timeString,
       icon: FaSlash,
       chart: <TiltChart transportationTask={transportationTask} />,
       render: transportationTask.constraints.tilt ? true : false,

@@ -2,7 +2,7 @@ import { HiSearch } from 'react-icons/hi';
 import { useState } from 'react';
 import { useAsyncDebounce } from 'react-table';
 
-export const DeliveryFilter = ({ filter, setFilter }: any) => {
+export const TableFilter = ({ filter, setFilter }: any) => {
   const [value, setValue] = useState(filter);
 
   const onChange = useAsyncDebounce((value) => {
@@ -19,7 +19,7 @@ export const DeliveryFilter = ({ filter, setFilter }: any) => {
               setValue(e.target.value);
               onChange(e.target.value);
             }}
-            placeholder='Sendungen durchsuchen'
+            placeholder='Elemente durchsuchen'
             className='rounded-md border border-grey-300 bg-gray-100 pr-10 shadow-sm px-2 focus:outline-0 transition-all focus:ring-oneGrey-light font-one mr-2 w-full'
           />
         </div>
@@ -28,4 +28,4 @@ export const DeliveryFilter = ({ filter, setFilter }: any) => {
   );
 };
 
-export default DeliveryFilter;
+export default TableFilter;

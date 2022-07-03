@@ -12,12 +12,12 @@ import { BACKEND_URL } from '../../../config/envVars';
 
 export type NewDeliveryFormInputs = {
   productType: string;
-  description: string;
-  departure: string;
-  destination: string;
-  deliveryId: string;
+  productDescription: string;
+  fromLocation: string;
+  toLocation: string;
+  shippingId: string;
   deviceID: string;
-  email: string;
+  ownerMail: string;
   constraints: any;
 };
 
@@ -26,26 +26,26 @@ export const NewDeliverySchema = yup.object().shape({
     .string()
     .typeError('Die Produktart muss angegeben werden.')
     .required('Die Produktart muss angegeben werden.'),
-  description: yup
+  productDescription: yup
     .string()
     .typeError('Eine Beschreibung ist erforderlich.')
     .required('Eine Beschreibung ist erforderlich.'),
-  departure: yup
+  fromLocation: yup
     .string()
     .typeError('Der Startort muss angegeben werden.')
     .required('Der Startort muss angegeben werden.'),
-  destination: yup
+  toLocation: yup
     .string()
     .typeError('Der Zielort muss angegeben werden.')
     .required('Der Zielort muss angegeben werden.'),
-  deliveryId: yup
+  shippingId: yup
     .string()
     .typeError('Die Sendungsnummer muss angegeben werden.')
     .required('Die Sendungsnummer muss angegeben werden.'),
-  email: yup
+  ownerMail: yup
     .string()
-    .typeError('Eine Email muss angegeben werden.')
-    .required('Eine Email muss angegeben werden.'),
+    .typeError('Eine ownerMail muss angegeben werden.')
+    .required('Eine ownerMail muss angegeben werden.'),
 });
 
 const NewDeliveryForm = (
@@ -77,6 +77,7 @@ const NewDeliveryForm = (
         BACKEND_URL + '/public/tasks',
         dataRequest,
       );
+      setOpen(false);
     } catch (error: any) {
       console.log(error);
     }

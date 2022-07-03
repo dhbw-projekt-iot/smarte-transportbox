@@ -8,8 +8,8 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import dayjs from 'dayjs';
 import { Line } from 'react-chartjs-2';
-import { testData } from '../testData';
 
 ChartJS.register(
   CategoryScale,
@@ -64,6 +64,16 @@ const VibrationChart = ({ transportationTask }) => {
 
   const options: any = {
     responsive: true,
+    scales: {
+      y: {
+        beginAtZero: false,
+      },
+      x: {
+        ticks: {
+          maxTicksLimit: 24,
+        },
+      },
+    },
     plugins: {
       legend: {
         position: 'bottom' as const,
@@ -78,17 +88,19 @@ const VibrationChart = ({ transportationTask }) => {
   };
 
   let dataArray: any = [];
-  testData.map((delivery) => {
-    if (delivery.id === transportationTask._id) {
-      dataArray = delivery.vibrationData.data;
-    }
-  });
+  let labels: any = [];
+  if (transportationTask.measurements) {
+    transportationTask.measurements.map((dataPoint) => {
+      dataArray.push(dataPoint.vibration);
+      labels.push(dayjs(dataPoint.timestamp).format('HH:mm'));
+    });
+  }
 
   const data = {
     labels,
     datasets: [
       {
-        label: 'Erschütterungen in Anzahl',
+        label: 'Erschütterungsverlauf.',
         data: dataArray,
         borderColor: '#6366f1',
         backgroundColor: '#6366f1',

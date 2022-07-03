@@ -24,7 +24,7 @@ function App() {
           <Route path='/'>
             <Route index element={<Landing />} />
             <Route path='app' element={<LayoutWithNavbar />}>
-              <Route index element={<Dashboard />} />
+              <Route index element={<Deliveries />} />
               <Route path='dashboard' element={<Dashboard />} />
               <Route path='deliveries' element={<Deliveries />} />
 
