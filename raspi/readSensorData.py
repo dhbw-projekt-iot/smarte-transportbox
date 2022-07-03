@@ -1,7 +1,7 @@
 from sqlite3 import Timestamp
 from numpy import var
 from register import register
-from currentJob import currentJob
+from currentJob import currentJob as fetchCurrentJob
 from pushIncident import pushIncident
 from datetime import datetime as DateTime
 from os.path import exists
@@ -88,74 +88,12 @@ def getDeviceID():
 ############################## Check task
 
 def getCurrentJob(deviceID):
-    job = {
-        "deviceID": "abc", 
-        "measurements": [], 
-        "incidents": [], 
-        "constraints": {
-            "temperature": {
-		        "criticalMaximum": 30,
-                "criticalMinimum": 20,
-                "warningThresholdHigh": 2,
-                "warningThresholdLow": 1,
-                "exceedCountUntilIncident": 5,
-                "exceedMinutesUntilIncident": 7    
-	        },
-	        "humidity": {
-		        "criticalMaximum": 45,
-                "criticalMinimum": 25,
-                "warningThresholdHigh": 2,
-                "warningThresholdLow": 1,
-                "exceedCountUntilIncident": 5,
-                "exceedMinutesUntilIncident": 7 
-	        },
-	        "tilt": {
-		        "criticalMaximum": 10,
-                "criticalMinimum": 1,
-                "warningThresholdHigh": 2,
-                "warningThresholdLow": 1,
-                "exceedCountUntilIncident": 5,
-                "exceedMinutesUntilIncident": 7 
-	        },
-	        "vibration": {
-		        "criticalMaximum": 10,
-                "criticalMinimum": 1,
-                "warningThresholdHigh": 2,
-                "warningThresholdLow": 1,
-                "exceedCountUntilIncident": 5,
-                "exceedMinutesUntilIncident": 7 
-	        },
-        },
-        "productDescription": "",
-        "productType": "",
-        "shippingID": "",
-        "fromLocation": "",
-        "toLocation": "",
-        "ownerMail": "",
-        "createdAt": "",
-        "status": ""
-    }
-
-    with open("currentJob.json", "w") as JobFile:
-        json.dump(job, JobFile, indent=4)
-
-    with open("currentJob.json", "r") as readJobFile:
-        job=readJobFile.read()
-
-    currentJobJSON = json.loads(job)
-
-    if len(currentJobJSON) > 1:
-        return currentJobJSON
-    else:
-        job = currentJob(deviceID)
-        with open("currentJob.json", "w", encoding="utf-8") as JobFile:
-            json.dump(job, JobFile, indent=4)
-        return job   
+    return fetchCurrentJob(deviceID) 
 
 ############################################################
 ############################## GPS
 def readString():
-    while 1:
+    while True:
         while ser.read().decode("utf-8") != '$':  # Wait for the begging of the string
             pass  # Do nothing
         line = ser.readline().decode("utf-8")  # Read the entire string
@@ -163,16 +101,24 @@ def readString():
 
 def transformCoordinates(coord):
     return str(float(coord)/100.0)
-
+    
 def getCoordinates():
+    count = 0
     while True:
-        line = readString()
-        if line.startswith("GPRMC"):
-            gprmc = line.split(",")[3:7]
-            latitude =  "+" + transformCoordinates(gprmc[0]) if gprmc[1] == "N" else "-" + transformCoordinates(gprmc[0])
-            longitude = "+" + transformCoordinates(gprmc[2]) if gprmc[3] == "E" else "-" + transformCoordinates(gprmc[2])
-            fullCoordinates = latitude + "," + longitude
-            return fullCoordinates
+        try: 
+            line = readString()
+            if line.startswith("GPRMC"):
+                gprmc = line.split(",")[3:7]
+                latitude =  "+" + transformCoordinates(gprmc[0]) if gprmc[1] == "N" else "-" + transformCoordinates(gprmc[0])
+                longitude = "+" + transformCoordinates(gprmc[2]) if gprmc[3] == "E" else "-" + transformCoordinates(gprmc[2])
+                fullCoordinates = latitude + "," + longitude
+                return fullCoordinates
+        except:
+            print("GPS could not be measured. Trying it again!")
+            count = count + 1
+            if count == 5:
+                return ","
+            sleep(5)
 
 ############################################################
 ############################## execution
@@ -219,16 +165,13 @@ def createJSONFile(jsonData):
         json.dump(oldContent, jsonFile)
 
 def sendMeasurements():
-    measurements = open("measurement.json", "r").readlines()
+    with open("measurement.json", "r") as file:
+        measurementsString = file.read().replace("\n", "")
+        measurementsJSON = json.loads(measurementsString)
+        pushMeasurements(deviceID, measurementsJSON)
 
-    pushMeasurements(deviceID, measurements)
-    
     with open("measurement.json", "w") as measurementFile:
         measurementFile.write("[]")
-
-
-def updateCurrentTask():
-    getCurrentJob(deviceID)
     
 def checkConstraints(measurements):
     currentTask = currentJob
@@ -267,15 +210,20 @@ counter = 0
 print("Starting monitoring…")
 
 while True:
+    
+    # 2h
+    if counter % 120 == 0:
+        print("Updating current task")
+        currentJob = getCurrentJob(deviceID)
+    # 30sec.
     print("Reading sensor data…")
     createJSONFile(measurementDic())
-
+    
+    # 15min.
     if counter % 15 == 0:
         print("Send cached measurements")
         sendMeasurements()
-    if counter % 120 == 0:
-        print("Updating current task")
-        updateCurrentTask()
+    
 
     counter = counter + 1
     sleep(readSensorDataIntervall)
