@@ -1,6 +1,3 @@
-import { useEffect } from 'react';
-import { useAppDispatch } from '../../../store/hooks';
-import { fetchTransportationTasks } from '../../../store/transportationTaskSlice';
 import DeliveryTable from './DeliveryTable';
 
 const Deliveries = () => {
