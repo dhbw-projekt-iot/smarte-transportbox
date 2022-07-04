@@ -1,10 +1,8 @@
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { HiLocationMarker } from 'react-icons/hi';
-import markerIconPng from 'leaflet/dist/images/marker-icon.png';
-import { Icon } from 'leaflet';
 import RoutingMachine from './RoutingMachine';
 import L from 'leaflet';
+import icon from 'leaflet/dist/images/marker-icon.png';
 
 const svgIcon = L.divIcon({
   html: `
@@ -20,17 +18,50 @@ const svgIcon = L.divIcon({
 </svg>`,
   className: '',
   iconSize: [24, 40],
-  iconAnchor: [12, 40],
+  iconAnchor: [14, 42],
 });
 
-var greenIcon = new Icon({
-  iconUrl: 'https://freesvg.org/img/map-pin.png',
-  shadowUrl: 'http://leafletjs.com/examples/custom-icons/leaf-shadow.png',
+let positionIcon = L.icon({
+  iconUrl: icon,
+  iconAnchor: [12, 42], // point of the icon which will correspond to marker's location
 });
+const GMap = ({ transportationTask }) => {
+  let position: any = undefined;
+  const stops: any[] = [];
 
-const GMap = () => {
-  const position: any = [49.01435, 8.38812];
+  let waypoints: any[] = [];
+  if (
+    transportationTask.measurements &&
+    transportationTask.measurements.length > 0
+  ) {
+    transportationTask.measurements.map((dataPoint) => {
+      let waypoint = dataPoint.location.split(',');
+      waypoint = waypoint.map((coordinate) => {
+        return Number(coordinate);
+      });
+      waypoints.push(waypoint);
+    });
 
+    position =
+      transportationTask.measurements[
+        transportationTask.measurements.length - 1
+      ].location.split(',');
+    position = position.map((coordinate) => {
+      return Number(coordinate);
+    });
+
+    position =
+      transportationTask.measurements[
+        transportationTask.measurements.length - 1
+      ].location.split(',');
+    stops.push(
+      position.map((coordinate) => {
+        return Number(coordinate);
+      }),
+    );
+  }
+
+  const Route = RoutingMachine({ waypoints: waypoints });
   return (
     <>
       <div className='py-4 h-screen w-full'>
@@ -42,8 +73,13 @@ const GMap = () => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
           />
-          <RoutingMachine />
-          <Marker position={position} icon={svgIcon} />
+          {position !== undefined && <Route />}
+          {position !== undefined && (
+            <Marker position={position} icon={svgIcon} />
+          )}
+          {stops.map((stop) => (
+            <Marker position={stop} icon={positionIcon} />
+          ))}
         </MapContainer>
       </div>
     </>

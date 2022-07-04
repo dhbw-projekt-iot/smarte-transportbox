@@ -5,23 +5,18 @@ import {
   useGlobalFilter,
 } from 'react-table';
 import { useMemo, useState } from 'react';
-import TableFilter from './TableFilter';
+import TableFilter from '../TableFilter';
 import {
-  HiPlus,
   HiMinusSm,
   HiOutlineArrowSmDown,
   HiOutlineArrowSmUp,
 } from 'react-icons/hi';
 import { useNavigate } from 'react-router';
-import NewDelivery from './NewDelivery';
-import { useAppSelector } from '../../../store/hooks';
 import dayjs from 'dayjs';
-import TableNav from './TableNav';
+import TableNav from '../TableNav';
 
-const DeliveryTable = () => {
-  const deliveries = useAppSelector(
-    (state) => state.transportationTasks.transportationTasks,
-  );
+const IncidentsTable = ({ transportationTask, setIncidentTableOpen }) => {
+  const incidents = transportationTask.incidents;
   const [open, setOpen] = useState(false);
   let navigate = useNavigate();
 
@@ -37,78 +32,25 @@ const DeliveryTable = () => {
       {
         Header: 'ID',
         accessor: '_id',
-        width: 'w-1/12 ',
+        width: 'w-1/4 ',
       },
       {
-        Header: 'Sendungsart',
-        accessor: 'productType',
-        width: 'w-1/6 ',
+        Header: 'Typ',
+        accessor: 'sensor',
+        width: 'w-1/4 ',
       },
       {
-        Header: 'Erstelldatum',
+        Header: 'Wert',
+        accessor: 'value',
+        width: 'w-1/4 ',
+      },
+      {
+        Header: 'Zeitpunkt',
         accessor: 'createdAt',
-        width: 'w-1/6 ',
+        width: 'w-1/4 ',
         Cell: (cell: any) => {
-          return dayjs(cell.row.values.createdAt).format('DD.MM.YYYY');
+          return dayjs(cell.row.values.createdAt).format('DD.MM.YYYY HH:mm');
         },
-      },
-      {
-        Header: 'Status',
-        accessor: 'status',
-        width: 'w-1/6 ',
-        Cell: (cell: any) => {
-          switch (cell.row.values.status) {
-            case 'zugestellt': {
-              return (
-                <span className='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800'>
-                  {cell.row.values.status}
-                </span>
-              );
-            }
-            case 'ausstehend': {
-              return (
-                <span className='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800'>
-                  {cell.row.values.status}
-                </span>
-              );
-            }
-            case 'versendet': {
-              return (
-                <span className='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800'>
-                  {cell.row.values.status}
-                </span>
-              );
-            }
-            case 'verloren': {
-              return (
-                <span className='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800'>
-                  {cell.row.values.status}
-                </span>
-              );
-            }
-            default: {
-              return (
-                <span className='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800'>
-                  {cell.row.values.status}
-                </span>
-              );
-            }
-          }
-        },
-      },
-      {
-        Header: '',
-        accessor: 'edit',
-        width: 'w-1/12 ',
-        Cell: (cell: any) => (
-          <button
-            className='text-indigo-700 hover:text-indigo-700'
-            value='edit'
-            onClick={(e) => showDetails(e, cell.row.values._id)}
-          >
-            Details
-          </button>
-        ),
       },
     ],
     [],
@@ -130,7 +72,7 @@ const DeliveryTable = () => {
     state,
     setGlobalFilter,
   } = useTable(
-    { columns, data: deliveries },
+    { columns, data: incidents },
     useGlobalFilter,
     useSortBy,
     usePagination,
@@ -142,18 +84,9 @@ const DeliveryTable = () => {
   // return Element
   return (
     <>
-      <NewDelivery open={open} setOpen={setOpen} />
       <div className='w-full sm:flex'>
         <div className='w-full flex justify-between gap-4 pb-4'>
           <TableFilter filter={globalFilter} setFilter={setGlobalFilter} />
-
-          <button
-            type='button'
-            className='focus:outline-none rounded-full border border-transparent bg-indigo-700 hover:bg-indigo-900 p-2 text-white shadow-sm focus:ring-2 focus:ring-indigo-900 focus:ring-offset-2'
-            onClick={() => setOpen(true)}
-          >
-            <HiPlus className='w-7 h-7' />
-          </button>
         </div>
       </div>
       <div className='h-max min-w-full shadow-loginbody rounded-md'>
@@ -237,6 +170,14 @@ const DeliveryTable = () => {
                 pageCount={pageCount}
               />
             </div>
+            <div className='w-full flex justify-center'>
+              <button
+                className='font-medium text-md text-indigo-600 hover:text-indigo-500 my-3'
+                onClick={() => setIncidentTableOpen(false)}
+              >
+                Tabelle ausblenden
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -244,4 +185,4 @@ const DeliveryTable = () => {
   );
 };
 
-export default DeliveryTable;
+export default IncidentsTable;

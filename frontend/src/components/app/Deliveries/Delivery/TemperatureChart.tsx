@@ -9,9 +9,9 @@ import {
   Legend,
 } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
+import dayjs from 'dayjs';
 
 import { Line } from 'react-chartjs-2';
-import { testData } from '../testData';
 
 ChartJS.register(
   annotationPlugin,
@@ -24,22 +24,7 @@ ChartJS.register(
   Legend,
 );
 
-const labels = [
-  '00:00',
-  '02:00',
-  '04:00',
-  '06:00',
-  '08:00',
-  '10:00',
-  '12:00',
-  '14:00',
-  '16:00',
-  '18:00',
-  '20:00',
-  '22:00',
-];
 const TemperatureChart = ({ transportationTask }) => {
-  console.log(transportationTask);
   const minThreshold = {
     type: 'line',
     yMin: transportationTask.constraints.temperature.criticalMinimum,
@@ -58,6 +43,16 @@ const TemperatureChart = ({ transportationTask }) => {
 
   const options: any = {
     responsive: true,
+    scales: {
+      y: {
+        beginAtZero: false,
+      },
+      x: {
+        ticks: {
+          maxTicksLimit: 24,
+        },
+      },
+    },
     plugins: {
       legend: {
         position: 'bottom' as const,
@@ -72,11 +67,13 @@ const TemperatureChart = ({ transportationTask }) => {
   };
 
   let dataArray: any = [];
-  testData.map((delivery) => {
-    if (delivery.id === transportationTask._id) {
-      dataArray = delivery.temperatureData.data;
-    }
-  });
+  let labels: any = [];
+  if (transportationTask.measurements) {
+    transportationTask.measurements.map((dataPoint) => {
+      dataArray.push(dataPoint.temperature);
+      labels.push(dayjs(dataPoint.timestamp).format('HH:mm'));
+    });
+  }
 
   const data = {
     labels,
