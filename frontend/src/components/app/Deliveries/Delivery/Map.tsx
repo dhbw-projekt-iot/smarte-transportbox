@@ -48,9 +48,7 @@ const GMap = ({ transportationTask }) => {
       waypoint = waypoint.map((coordinate) => {
         return Number(coordinate);
       });
-      if (!waypoint || waypoint[0] !== 0) {
-        waypoints.push(waypoint);
-      }
+      waypoints.push(waypoint);
     });
 
     position =
@@ -65,16 +63,14 @@ const GMap = ({ transportationTask }) => {
       transportationTask.measurements[
         transportationTask.measurements.length - 1
       ].location.split(',');
-    if (!position || position[0] !== 0) {
-      stops.push(
-        position.map((coordinate) => {
-          return Number(coordinate);
-        }),
-      );
-    }
+    stops.push(
+      position.map((coordinate) => {
+        return Number(coordinate);
+      }),
+    );
   }
 
-  if (position[0] === '') {
+  if (position === undefined || position[0] === '' || position[0] === 0) {
     position = [49.02728, 8.38585];
   }
 
@@ -89,7 +85,6 @@ const GMap = ({ transportationTask }) => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
           />
-
           {position !== undefined && (
             <Marker position={position} icon={svgIcon} />
           )}
