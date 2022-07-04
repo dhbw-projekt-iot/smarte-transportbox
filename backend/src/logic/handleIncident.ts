@@ -6,9 +6,7 @@ export async function handleIncident(ownerMail: string, transportationTask: any,
 		const env = process.env as any;
 	
 		const transporter = nodemailer.createTransport({
-			host: env.INCIDENT_MAIL_HOST,
-			port: env.INCIDENT_MAIL_PORT,
-			secure: false,
+			service: "Hotmail",
 			auth: {
 				user: env.INCIDENT_MAIL_USERNAME || mailAccount.user,
 				pass: env.INCIDENT_MAIL_PASSWORD || mailAccount.pass
