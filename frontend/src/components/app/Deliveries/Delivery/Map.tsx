@@ -21,6 +21,16 @@ const svgIcon = L.divIcon({
   iconAnchor: [14, 42],
 });
 
+const waypointIcon = L.divIcon({
+  html: `
+<svg height="100" width="100">
+<circle cx="50" cy="50" r="5" fill="red" />
+</svg>`,
+  className: '',
+  iconSize: [12, 12],
+  iconAnchor: [50, 48],
+});
+
 let positionIcon = L.icon({
   iconUrl: icon,
   iconAnchor: [12, 42], // point of the icon which will correspond to marker's location
@@ -28,7 +38,6 @@ let positionIcon = L.icon({
 const GMap = ({ transportationTask }) => {
   let position: any = undefined;
   const stops: any[] = [];
-
   let waypoints: any[] = [];
   if (
     transportationTask.measurements &&
@@ -39,7 +48,9 @@ const GMap = ({ transportationTask }) => {
       waypoint = waypoint.map((coordinate) => {
         return Number(coordinate);
       });
-      waypoints.push(waypoint);
+      if (!waypoint || waypoint[0] !== 0) {
+        waypoints.push(waypoint);
+      }
     });
 
     position =
@@ -54,14 +65,19 @@ const GMap = ({ transportationTask }) => {
       transportationTask.measurements[
         transportationTask.measurements.length - 1
       ].location.split(',');
-    stops.push(
-      position.map((coordinate) => {
-        return Number(coordinate);
-      }),
-    );
+    if (!position || position[0] !== 0) {
+      stops.push(
+        position.map((coordinate) => {
+          return Number(coordinate);
+        }),
+      );
+    }
   }
 
-  const Route = RoutingMachine({ waypoints: waypoints });
+  if (position[0] === '') {
+    position = [49.02728, 8.38585];
+  }
+
   return (
     <>
       <div className='py-4 h-screen w-full'>
@@ -73,12 +89,15 @@ const GMap = ({ transportationTask }) => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
           />
-          {position !== undefined && <Route />}
+
           {position !== undefined && (
             <Marker position={position} icon={svgIcon} />
           )}
           {stops.map((stop) => (
             <Marker position={stop} icon={positionIcon} />
+          ))}
+          {waypoints.map((stop) => (
+            <Marker position={stop} icon={waypointIcon} />
           ))}
         </MapContainer>
       </div>
