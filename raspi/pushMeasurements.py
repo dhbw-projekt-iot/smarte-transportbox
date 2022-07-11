@@ -1,16 +1,20 @@
 import requests
 import os
+from pprint import pprint
 
 # host = "localhost:4004"
 host = os.environ.get("host")
 
 def pushMeasurements(deviceID, measurements):
-    r = requests.get("http://{host}/internal/pushMeasurements".format(host = host), {"measurements": measurements, "id": deviceID})
+    r = requests.post("https://{host}/internal/pushMeasurements".format(host = host), json={"measurements": measurements, "id": deviceID})
 
-    if r.status_code == 400:
-        print("No current task for the given device id")
+    print(r.text)
+
+    if r.status_code != 200:
+        print(r.text)
+        print("Pushing measurements failed...")
         return
 
-    response = r.text()
+    response = r
 
     return response

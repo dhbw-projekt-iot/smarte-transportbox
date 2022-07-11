@@ -5,6 +5,7 @@ import os
 host = os.environ.get("host")
 
 def register():
+    print("registering device")
     r = requests.get("http://{host}/internal/register".format(host = host))
 
     if r.status_code != 201:

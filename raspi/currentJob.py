@@ -5,10 +5,12 @@ import os
 host = os.environ.get("host")
 
 def currentJob(deviceID):
-    r = requests.get("http://{host}/internal/currentJob".format(host = host), {"deviceID": deviceID})
+    print(deviceID)
+    r = requests.get("http://{host}/internal/currentJob/{id}".format(host = host, id = deviceID))
 
     if r.status_code != 200:
-        print("No current job available...")
+        print(str(r.text))
+        print(str(r.status_code) + " No current job available...")
         return
 
     response = r.json()

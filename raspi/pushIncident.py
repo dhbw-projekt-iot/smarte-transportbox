@@ -5,12 +5,17 @@ import os
 host = os.environ.get("host")
 
 def pushIncident(deviceID, incident):
-    r = requests.get("http://{host}/internal/pushIncident".format(host = host), {"incident": incident, "id": deviceID})
-
-    if r.status_code == 400:
-        print("No current task for the given device id")
+    print("[!]\tPushing incident…")
+    
+    r = requests.post("https://{host}/internal/pushIncident".format(host = host), json={"incident": incident, "id": deviceID})
+    
+    print(deviceID)
+    
+    if r.status_code != 200:
+        print(r.text)
+        print("Pushing incident failed")
         return
 
-    response = r.text()
+    response = r
 
     return response
